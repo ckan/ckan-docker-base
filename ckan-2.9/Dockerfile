@@ -86,7 +86,6 @@ RUN mkdir -p $CKAN_STORAGE_PATH && \
     chown -R ckan:ckan $CKAN_STORAGE_PATH
 
 COPY setup/prerun.py ${APP_DIR}
-COPY setup/supervisor.worker.conf /etc/supervisord.d/worker.conf
 COPY setup/start_ckan.sh ${APP_DIR}
 ADD https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/wsgi.py ${APP_DIR}
 
