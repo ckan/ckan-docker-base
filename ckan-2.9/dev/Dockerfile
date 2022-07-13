@@ -15,5 +15,6 @@ RUN mkdir $SRC_EXTENSIONS_DIR
 
 COPY setup/start_ckan_development.sh ${APP_DIR}
 
+RUN chown ckan -R /srv/app
 
 CMD ["/srv/app/start_ckan_development.sh"]
