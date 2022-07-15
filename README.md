@@ -8,11 +8,14 @@ The following CKAN versions are available as different Docker image tags:
 | --- | --- | --- | --- |
 | 2.9.5 | base image | `ckan/ckan-base:2.9.5` |  |
 | 2.9.5 | dev image | `ckan/ckan-base:2.9.5-dev` |  |
-| 2.10.0 | base image | `ckan/ckan-base:2.10.0` | not implemented yet |
-| 2.10.0 | dev image | `ckan/ckan-base:2.10.0-dev` | not implemented yet|
+| 2.10.0 | base image | `ckan/ckan-base:2.10.0` | <not implemented yet> |
+| 2.10.0 | dev image | `ckan/ckan-base:2.10.0-dev` | <not implemented yet>|
 
 
 ### Building and Pushing the images
+
+The images can be built locally and tagged appropriately so they can then be pushed into the CKAN DockerHub repo
+assuming you have the correct permission to do so
 
 For CKAN 2.9.5 base images, go to the `ckan-2.9/base` directory and use the Makefile included:
 
