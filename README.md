@@ -25,3 +25,7 @@ For CKAN 2.9.5 dev images, go to the `ckan-2.9/dev` directory and use the Makefi
     make push
 
 The CKAN 2.10 base and dev images will be available in the near future
+
+### Scanning the images for vulnerabilites
+
+<to do - provide details on the process of how we scan images - probably using [Synk Advisor](https://docs.docker.com/develop/scan-images/)>
