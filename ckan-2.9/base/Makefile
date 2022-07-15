@@ -12,7 +12,7 @@ ifeq ($(CKAN_VERSION),$(filter $(CKAN_VERSION),2.9.5))
 	docker build -t $(TAG_NAME) .
 endif
 
-push: ## Push a CKAN 2.9.5 image to the Docker registry, `make push`
+push: ## Push a CKAN 2.9.5 image to the DockerHub registry, `make push`
 ifeq ($(CKAN_VERSION),$(filter $(CKAN_VERSION),2.9.5))
 	docker push $(TAG_NAME)
 endif
