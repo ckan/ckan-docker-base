@@ -1,8 +1,10 @@
-Pre-configured CKAN Docker images
+### Pre-configured CKAN Docker images
 
-The following CKAN versions are available as different image tags:
+This is the Git repo of the official Docker images for [CKAN](https://github.com/ckan/ckan/).
 
-| CKAN Version | type | Docker tag | Notes |
+The following CKAN versions are available as different Docker image tags:
+
+| CKAN Version | Type | Docker tag | Notes |
 | --- | --- | --- | --- |
 | 2.9.5 | base image | `ckan/ckan-base:2.9.5` |  |
 | 2.9.5 | dev image | `ckan/ckan-base:2.9.5-dev` |  |
@@ -22,3 +24,4 @@ For CKAN 2.9.5 dev images, go to the `ckan-2.9/dev` directory and use the Makefi
     make build
     make push
 
+The CKAN 2.10 base and dev images will be available in the near future
