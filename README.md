@@ -3,7 +3,7 @@ Pre-configured CKAN Docker images
 The following CKAN versions are available as different image tags:
 
 | CKAN Version | type | Docker tag | Notes |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | 2.9.5 | base image | `ckan/ckan-base:2.9.5` |  |
 | 2.9.5 | dev image | `ckan/ckan-base:2.9.5-dev` |  |
 | 2.10.0 | base image | `ckan/ckan-base:2.10.0` | not implemented yet |
