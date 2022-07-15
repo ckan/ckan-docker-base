@@ -11,7 +11,7 @@ RUN apk add --no-cache libffi-dev
 RUN pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/dev-requirements.txt
 
 # Create folder for local extensions sources
-RUN mkdir $SRC_EXTENSIONS_DIR
+RUN mkdir ${SRC_EXTENSIONS_DIR}
 
 COPY setup/start_ckan_development.sh ${APP_DIR}
 
