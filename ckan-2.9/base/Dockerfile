@@ -79,7 +79,7 @@ RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
 
 # Create a local user and group to run the app
 RUN addgroup -g 92 -S ckan && \
-    adduser -u 92 -h /srv/app -H -D -S -G ckan ckan
+    adduser -u 92 -h /srv/app -s /bin/bash -D -G ckan ckan
 
 # Create local storage folder
 RUN mkdir -p ${CKAN_STORAGE_PATH} && \
@@ -93,6 +93,9 @@ ADD https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/wsgi.py ${APP_DIR}
 ONBUILD RUN mkdir /docker-entrypoint.d
 
 RUN chown ckan -R /srv/app
+
+RUN addgroup sudo && \
+    adduser ckan sudo
 
 EXPOSE 5000
 
