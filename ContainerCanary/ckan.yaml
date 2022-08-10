@@ -19,3 +19,13 @@ checks:
         path: /
         port: 5000
       initialDelaySeconds: 10
+  - name: status_show
+    description: Is CKAN status_show accessible
+    probe:
+      httpGet:
+        path: /api/3/action/status_show
+        port: 5000
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      failureThreshold: 6
+      timeoutSeconds: 10
