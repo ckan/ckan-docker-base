@@ -3,9 +3,12 @@ apiVersion: container-canary.nvidia.com/v1
 kind: Validator
 name: ckan
 description: ckan container validator
+ports:
+  - port: 5000
+    protocol: TCP
 checks:
   - name: uwsgi
-    description: Is the correct number of uwsgi processes running (4)?
+    description: Is the correct number of uwsgi processes running?
     probe:
       exec:
         command:
