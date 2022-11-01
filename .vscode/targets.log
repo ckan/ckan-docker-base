@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Tue Aug  9 13:29:27 2022
+# Make data base, printed on Tue Nov  1 13:40:03 2022
 
 # Variables
 
@@ -18,6 +18,8 @@ make: *** No rule to make target `all'.  Stop.
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -39,19 +41,19 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 P9K_SSH = 0
 # environment
-VSCODE_CWD = /
+VSCODE_CWD = /Users/brettjones/Dropbox/GitHub/ckan-docker-okfn
 # environment
 PATH = /Users/brettjones/.rd/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/brettjones/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
-LaunchInstanceID = 6836BF7D-43D8-4499-8A1A-7DA6B441CFE5
+LaunchInstanceID = F357EF16-8141-4D97-97B8-35B571343889
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.RGJbREQs0t/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.zaW8JAaBIk/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -65,7 +67,9 @@ HOME = /Users/brettjones
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/brettjones/Library/Application Support/Code/CachedData/b06ae3b2d2dbfe28bca3134cc6be65935cdfea6a
+VSCODE_CLI = 1
+# environment
+VSCODE_CODE_CACHE_PATH = /Users/brettjones/Library/Application Support/Code/CachedData/d045a5eda657f4d7b676dedbfa7aab8207f8a075
 # environment
 LOGNAME = brettjones
 # environment
@@ -78,24 +82,33 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
 XPC_FLAGS = 0x0
-# default
-MAKE = $(MAKE_COMMAND)
-# default
-MAKECMDGOALS := all
 # environment
-SHLVL = 1
+COLORTERM = truecolor
+# default
+ 
+MAKE = $(MAKE_COMMAND)
+# environment
+LC_TERMINAL = iTerm2
+# environment
+SHLVL = 3
 # default
 MAKE_VERSION := 3.81
 # environment
 USER = brettjones
 # makefile
 .DEFAULT_GOAL := 
+# default
+MAKECMDGOALS := all
+# environment
+TERM_SESSION_ID = w0t2p0:0E948543-7C84-4911-846A-1CFC4E5B1E7D
 # environment
 LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
 MAKE_COMMAND := /Library/Developer/CommandLineTools/usr/bin/make
+# environment
+TERM_PROGRAM = iTerm.app
 # default
 .VARIABLES := 
 # environment
@@ -103,7 +116,7 @@ TMPDIR = /var/folders/1d/1f8mm_q561d11w6nm2qpwvxh0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/brettjones/Library/Application Support/Code/1.69.1-main.sock
+VSCODE_IPC_HOOK = /Users/brettjones/Library/Application Support/Code/1.72.2-main.sock
 # environment
 MallocNanoZone = 0
 # makefile
@@ -113,11 +126,19 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.248874865.248874871
+TERM_PROGRAM_VERSION = 3.4.4
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.276207631.276207637.7E0AB3F5-D0B1-44BE-95B5-A87E20B310E6
+# environment
+LC_TERMINAL_VERSION = 3.4.4
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
 +F = $(notdir $+)
+# environment
+ITERM_SESSION_ID = w0t2p0:0E948543-7C84-4911-846A-1CFC4E5B1E7D
+# environment
+COLORFGBG = 15;0
 # environment
 __CF_USER_TEXT_ENCODING = 0x1F5:0:2
 # environment
@@ -127,11 +148,15 @@ MAKEFILES :=
 # automatic
 <F = $(notdir $<)
 # environment
+ITERM_PROFILE = Default
+# environment
 PAGER = less
 # environment
 LC_ALL = C
 # environment
-SECURITYSESSIONID = 186aa
+SECURITYSESSIONID = 186ab
+# environment
+P9K_TTY = old
 # automatic
 ^F = $(notdir $^)
 # default
@@ -143,9 +168,13 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 565
+TERM = xterm-256color
+# environment
+_P9K_TTY = /dev/ttys002
+# environment
+VSCODE_PID = 55116
 # variable set hash-table stats:
-# Load=65/1024=6%, Rehash=0, Collisions=1/86=1%
+# Load=79/1024=8%, Rehash=0, Collisions=4/100=4%
 
 # Pattern-specific Variable Values
 
@@ -153,11 +182,10 @@ VSCODE_PID = 565
 
 # Directories
 
-# . (device 16777226, inode 242322133): 7 files, no impossibilities.
+# . (device 16777226, inode 242322133): 9 files, no impossibilities.
 
-# 7 files, no impossibilities in 1 directories.
+# 9 files, no impossibilities in 1 directories.
 
- 
 # Implicit Rules
 
 # No implicit rules.
@@ -186,6 +214,7 @@ Makefile:
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
+ 
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
@@ -228,6 +257,6 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Tue Aug  9 13:29:27 2022
+# Finished Make data base on Tue Nov  1 13:40:03 2022
 
  
