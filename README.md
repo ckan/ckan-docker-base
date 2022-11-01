@@ -12,6 +12,8 @@ The following CKAN versions are available in base or dev forms. They are disting
 | --- | --- | --- | --- |
 | 2.9.5 | base image | `ckan/ckan-base:2.9.5` |  |
 | 2.9.5 | dev image | `ckan/ckan-base:2.9.5-dev` |  |
+| 2.9.6 | base image | `ckan/ckan-base:2.9.6` |  |
+| 2.9.6 | dev image | `ckan/ckan-base:2.9.6-dev` |  |
 | 2.10.0 | base image | `ckan/ckan-base:2.10.0` | ***not implemented yet*** |
 | 2.10.0 | dev image | `ckan/ckan-base:2.10.0-dev` | ***not implemented yet***|
 
@@ -21,13 +23,13 @@ The following CKAN versions are available in base or dev forms. They are disting
 The images can be built locally and tagged appropriately so they can then be pushed into the CKAN DockerHub repo
 assuming you have the correct permission to do so
 
-For CKAN 2.9.5 base images, go to the `ckan-2.9/base` directory and use the Makefile included:
+For CKAN 2.9.6 base images, go to the `ckan-2.9/base` directory and use the Makefile included:
 
     cd ckan-2.9/base
     make build
     make push
 
-For CKAN 2.9.5 dev images, go to the `ckan-2.9/dev` directory and use the Makefile included:
+For CKAN 2.9.6 dev images, go to the `ckan-2.9/dev` directory and use the Makefile included:
 
     cd ckan-2.9/dev
     make build
