@@ -16,7 +16,7 @@ The following CKAN versions are available in base or dev forms. They are disting
 | 2.9.6 | dev image | `ckan/ckan-base:2.9.6-dev` |  |
 | 2.9.7 | base image | `ckan/ckan-base:2.9.7` |  |
 | 2.9.7 | dev image | `ckan/ckan-base:2.9.7-dev` |  |
-| master | base image | `ckan/ckan-base:master` |  |
+| master | base image | `ckan/ckan-base:master-4a43842` |  master brannch up to the commit SHA hash |
 | 2.10.0 | base image | `ckan/ckan-base:2.10.0` | ***not implemented yet*** |
 | 2.10.0 | dev image | `ckan/ckan-base:2.10.0-dev` | ***not implemented yet***|
 
