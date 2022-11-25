@@ -17,8 +17,8 @@ The following CKAN versions are available in base or dev forms. They are disting
 | 2.9.7 | base image | `ckan/ckan-base:2.9.7` |  |
 | 2.9.7 | dev image | `ckan/ckan-base:2.9.7-dev` |  |
 | master | base image | `ckan/ckan-base:master-4a43842` |  ***master branch up to the commit SHA hash*** |
-| 2.10.0 | base image | `ckan/ckan-base:2.10.0` | ***not implemented yet*** |
-| 2.10.0 | dev image | `ckan/ckan-base:2.10.0-dev` | ***not implemented yet***|
+| 2.10.0 | base image | `ckan/ckan-base:dev.v2.10` | ***dev 2.10 branch only, release branch soon*** |
+| 2.10.0 | dev image | `ckan/ckan-base:dev.v2.10-dev` | ***dev 2.10  branch only, release branch soon***|
 
 
 ### Building and Pushing the images
@@ -26,20 +26,27 @@ The following CKAN versions are available in base or dev forms. They are disting
 The images can be built locally and tagged appropriately so they can then be pushed into the CKAN DockerHub repo
 assuming you have the correct permission to do so
 
-For CKAN 2.9.6 base images, go to the `ckan-2.9/base` directory and use the Makefile included:
+For CKAN 2.9.7 base images, go to the `ckan-2.9/base` directory and use the Makefile included:
 
     cd ckan-2.9/base
     make build
     make push
 
-For CKAN 2.9.6 dev images, go to the `ckan-2.9/dev` directory and use the Makefile included:
+For CKAN 2.9.7 dev images, go to the `ckan-2.9/dev` directory and use the Makefile included:
 
     cd ckan-2.9/dev
     make build
     make push
 
-The CKAN 2.10 base and dev images will be available in the near future
+The CKAN 2.10 base and dev images are available as the dev branches at the moment
 
+    cd ckan-2.10/base
+    make build
+    make push
+
+    cd ckan-2.10/dev
+    make build
+    make push
 ### Scanning the images for vulnerabilites
 
 <to do - provide details on the process of how we scan images - probably using [Synk Advisor](https://docs.docker.com/develop/scan-images/)>
