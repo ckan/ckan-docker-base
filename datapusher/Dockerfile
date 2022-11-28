@@ -1,8 +1,7 @@
 FROM alpine:3.13
 
-ARG DATAPUSHER_VERSION
+ARG DATAPUSHER_VERSION=master
 ENV APP_DIR=/srv/app
-ENV GIT_BRANCH 0.0.18
 ENV GIT_URL https://github.com/ckan/datapusher.git
 ENV JOB_CONFIG ${APP_DIR}/datapusher_settings.py
 
@@ -32,7 +31,7 @@ RUN apk add --no-cache \
     cargo
 
 RUN mkdir ${APP_DIR}/src && cd ${APP_DIR}/src && \
-    git clone -b ${GIT_BRANCH} --depth=1 --single-branch ${GIT_URL} && \
+    git clone -b ${DATAPUSHER_VERSION} --depth=1 --single-branch ${GIT_URL} && \
     cd datapusher && \
     python3 setup.py install
 
