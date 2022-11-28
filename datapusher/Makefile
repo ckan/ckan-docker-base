@@ -1,6 +1,6 @@
 .PHONY: all help build build-all push
 SHELL := /bin/bash
-DATAPUSHER_VERSION=0.0.18
+DATAPUSHER_VERSION=0.0.19
 TAG_NAME="ckan/ckan-base-datapusher:$(DATAPUSHER_VERSION)"
 
 all: help
