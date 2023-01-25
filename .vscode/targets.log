@@ -6,8 +6,11 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
+make: *** No rule to make target `all'.  Stop.
 
-# Make data base, printed on Fri Jan 13 12:12:09 2023
+
+# Make data base, printed on Tue Jan 24 13:41:25 2023
 
 # Variables
 
@@ -28,6 +31,7 @@ SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
 # environment
+ 
 _ = /usr/bin/make
 # makefile
 MAKEFILE_LIST := 
@@ -38,9 +42,11 @@ P9K_SSH = 0
 # environment
 VSCODE_CWD = /
 # environment
-PATH = /Users/brettjones/.rd/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/brettjones/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+PATH = /Users/brettjones/.rd/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/brettjones/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/brettjones/.rd/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/brettjones/bin
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
+# environment
+LaunchInstanceID = 58FA9448-D2E8-4DF9-8ED7-EAADE690E874
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
@@ -60,7 +66,7 @@ HOME = /Users/brettjones
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/brettjones/Library/Application Support/Code/CachedData/e8a3071ea4344d9d48ef8a4df2c097372b0c5161
+VSCODE_CODE_CACHE_PATH = /Users/brettjones/Library/Application Support/Code/CachedData/97dec172d3256f8ca4bfb2143f3f76b503ca0534
 # environment
 LOGNAME = brettjones
 # environment
@@ -79,6 +85,8 @@ MAKE = $(MAKE_COMMAND)
 MAKECMDGOALS := all
 # environment
 SHLVL = 1
+# environment
+LOCAL_GIT_DIRECTORY = /Applications/GitHub Desktop.app/Contents/Resources/app/git
 # default
 MAKE_VERSION := 3.81
 # environment
@@ -98,7 +106,7 @@ TMPDIR = /var/folders/1d/1f8mm_q561d11w6nm2qpwvxh0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/brettjones/Library/Application Support/Code/1.74.2-main.sock
+VSCODE_IPC_HOOK = /Users/brettjones/Library/Application Support/Code/1.74.3-main.sock
 # environment
 MallocNanoZone = 0
 # makefile
@@ -125,6 +133,8 @@ MAKEFILES :=
 PAGER = less
 # environment
 LC_ALL = C
+# environment
+SECURITYSESSIONID = 186aa
 # automatic
 ^F = $(notdir $^)
 # default
@@ -136,9 +146,10 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 2236
+VSCODE_PID = 13604
 # variable set hash-table stats:
-# Load=63/1024=6%, Rehash=0, Collisions=1/84=1%
+ 
+# Load=66/1024=6%, Rehash=0, Collisions=1/87=1%
 
 # Pattern-specific Variable Values
 
@@ -220,8 +231,6 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Fri Jan 13 12:12:09 2023
+# Finished Make data base on Tue Jan 24 13:41:25 2023
 
  
-make: *** No rule to make target `all'.  Stop.
-
