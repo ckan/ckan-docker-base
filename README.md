@@ -16,9 +16,9 @@ The following CKAN versions are available in base or dev forms. They are disting
 | 2.9.6 | dev image | `ckan/ckan-base:2.9.6-dev` |  |
 | 2.9.7 | base image | `ckan/ckan-base:2.9.7` |  |
 | 2.9.7 | dev image | `ckan/ckan-base:2.9.7-dev` |  |
-| master | base image | `ckan/ckan-base:master-c555a97` |  ***master branch up to the commit SHA hash*** |
-| 2.10.0 | base image | `ckan/ckan-base:dev.v2.10` | ***dev 2.10 branch only, release branch soon*** |
-| 2.10.0 | dev image | `ckan/ckan-base:dev.v2.10-dev` | ***dev 2.10  branch only, release branch soon***|
+| master | base image | `ckan/ckan-base:master-c555a97` |  |
+| 2.10.0 | base image | `ckan/ckan-base:ckan-2.10.0` |  |
+| 2.10.0 | dev image | `ckan/ckan-base:ckan-2.10.0-dev` |  |
 
 
 ### Building and Pushing the images
@@ -47,6 +47,7 @@ The CKAN 2.10 base and dev images are available as the dev branches at the momen
     cd ckan-2.10/dev
     make build
     make push
+
 ### Scanning the images for vulnerabilites
 
 <to do - provide details on the process of how we scan images - probably using [Synk Advisor](https://docs.docker.com/develop/scan-images/)>
