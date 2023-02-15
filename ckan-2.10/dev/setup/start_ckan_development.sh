@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Install any local extensions in the src_extensions volume
 echo "Looking for local extensions to install..."
