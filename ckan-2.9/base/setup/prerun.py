@@ -4,9 +4,11 @@ import subprocess
 import psycopg2
 try:
     from urllib.request import urlopen
+    from urllib.request import Request
     from urllib.error import URLError
 except ImportError:
     from urllib2 import urlopen
+    from urllib2 import Request
     from urllib2 import URLError
 
 import time
@@ -74,9 +76,15 @@ def check_solr_connection(retry=None):
 
     url = os.environ.get("CKAN_SOLR_URL", "")
     search_url = '{url}/schema/name?wt=json'.format(url=url)
+        request = Request(search_url)
+    if os.environ.get("CKAN_SOLR_URL"):
+        username = os.environ.get("CKAN_SOLR_USER")
+        password = os.environ.get("CKAN_SOLR_PASSWORD")
+        base64string = base64.b64encode(f'{username}:{password}'.encode("ascii")).decode("ascii")
+        request.add_header("Authorization", "Basic %s" % base64string)
 
     try:
-        connection = urlopen(search_url)
+        connection = urlopen(request)
     except URLError as e:
         print(str(e))
         print("[prerun] Unable to connect to solr, waiting...")
