@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.15
 
 # Internals, you probably don't need to change these
 ENV APP_DIR=/srv/app
@@ -8,7 +8,7 @@ ENV PIP_SRC=${SRC_DIR}
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
 ENV GIT_URL=https://github.com/ckan/ckan.git
 # CKAN version to build
-ENV GIT_BRANCH=ckan-2.9.7
+ENV GIT_BRANCH=ckan-2.9.8
 # Customize these on the .env file if needed
 ENV CKAN_SITE_URL=http://localhost:5000
 ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher envvars
@@ -52,7 +52,12 @@ RUN apk add --no-cache tzdata \
         linux-headers \
         openssl-dev \
         libffi-dev \
-        cargo && \
+        cargo \
+    # Set up PROJ
+        geos-dev \ 
+        proj \
+        proj-util \
+        proj-dev && \
     # Create SRC_DIR
     mkdir -p ${SRC_DIR} && \
     # Install pip, supervisord and uwsgi

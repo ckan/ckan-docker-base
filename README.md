@@ -1,6 +1,25 @@
-# Pre-configured CKAN Docker images
+<h1 align="center">CKAN Docker Compose - Open Data & GIS</h1>
+<p align="center">
+<a href="https://github.com/OpenDataGIS/ckan"><img src="https://img.shields.io/badge/Docker%20CKAN-2.9.8-brightgreen" alt="CKAN Versions"></a>
 
-This is the Git repo of the official Docker images for [CKAN](https://github.com/ckan/ckan/).
+
+<p align="center">
+    <a href="#overview">Overview</a> •
+    <a href="#ckan-docker-roadmap">Branch roadmap</a> •
+    <a href="#building-and-pushing-the-images">Building and Pushing the images</a> •
+    <a href="#scanning-the-images-for-vulnerabilites">Scanning the images for vulnerabilites</a>
+</p>
+
+**Requirements**:
+* [Docker](https://docs.docker.com/get-docker/)
+
+## Overview
+Contains CKAN spatial images for the different components of CKAN Cloud and a Docker compose environment (based on [the Git repo of the official Docker images](ttps://github.com/ckan/ckan-docker-base)) for development and testing Open Data portals.
+
+>**Warning**:<br>
+>This is a **custom base images of CKAN** with specific extensions for spatial data. For the official Git Repo, please have a look: [Pre-configured CKAN Docker images](https://github.com/ckan/ckan-docker-base).
+
+# Pre-configured CKAN Docker images
 
 The images will usually be used as a Docker Compose install in conjunction with other Docker images that make up the CKAN platform. 
 
@@ -10,43 +29,12 @@ The following CKAN versions are available in base or dev forms. They are disting
 
 | CKAN Version | Type | Docker tag | Notes |
 | --- | --- | --- | --- |
-| 2.9.5 | base image | `ckan/ckan-base:2.9.5` |  |
-| 2.9.5 | dev image | `ckan/ckan-base:2.9.5-dev` |  |
-| 2.9.6 | base image | `ckan/ckan-base:2.9.6` |  |
-| 2.9.6 | dev image | `ckan/ckan-base:2.9.6-dev` |  |
-| 2.9.7 | base image | `ckan/ckan-base:2.9.7` |  |
-| 2.9.7 | dev image | `ckan/ckan-base:2.9.7-dev` |  |
-| master | base image | `ckan/ckan-base:master-c555a97` |  |
-| 2.10.0 | base image | `ckan/ckan-base:ckan-2.10.0` |  |
-| 2.10.0 | dev image | `ckan/ckan-base:ckan-2.10.0-dev` |  |
-
+| 2.9.8 | custom image | `ckan/ckan-spatial:master` | Includes dependencies for spatial capabilities. Compatible with ckanext-spatial. |
 
 ### Building and Pushing the images
 
-The images can be built locally and tagged appropriately so they can then be pushed into the CKAN DockerHub repo
-assuming you have the correct permission to do so
+The images can be built locally and tagged appropriately.
 
-For CKAN 2.9.7 base images, go to the `ckan-2.9/base` directory and use the Makefile included:
-
-    cd ckan-2.9/base
-    make build
-    make push
-
-For CKAN 2.9.7 dev images, go to the `ckan-2.9/dev` directory and use the Makefile included:
-
-    cd ckan-2.9/dev
-    make build
-    make push
-
-The CKAN 2.10 base and dev images are available as the dev branches at the moment
-
-    cd ckan-2.10/base
-    make build
-    make push
-
-    cd ckan-2.10/dev
-    make build
-    make push
 
 ### Scanning the images for vulnerabilites
 
