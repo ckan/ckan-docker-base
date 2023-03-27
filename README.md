@@ -29,7 +29,7 @@ The following CKAN versions are available in base or dev forms. They are disting
 
 | CKAN Version | Type | Docker tag | Notes |
 | --- | --- | --- | --- |
-| 2.9.8 | custom image | `ckan/ckan-spatial:master` | Includes dependencies for spatial capabilities. Compatible with ckanext-spatial. |
+| 2.9.8 | custom image | `ghcr.io/mjanez/ckan-spatial:master` | Includes dependencies for spatial capabilities. Compatible with ckanext-spatial. |
 
 ### Building and Pushing the images
 
