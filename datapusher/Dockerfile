@@ -1,6 +1,6 @@
-FROM alpine:3.13
+FROM alpine:3.14
 
-ARG DATAPUSHER_VERSION=master
+ARG DATAPUSHER_VERSION=${DATAPUSHER_VERSION}
 ENV APP_DIR=/srv/app
 ENV GIT_URL https://github.com/ckan/datapusher.git
 ENV JOB_CONFIG ${APP_DIR}/datapusher_settings.py
@@ -34,13 +34,10 @@ RUN mkdir ${APP_DIR}/src && cd ${APP_DIR}/src && \
     git clone -b ${DATAPUSHER_VERSION} --depth=1 --single-branch ${GIT_URL} && \
     cd datapusher && \
     python3 setup.py install
-
-## Need an custom version of requirements.txt  (with an old release of Werkzeug)
-
-COPY setup/requirements.txt ${APP_DIR}/src/
     
 RUN  cd ${APP_DIR}/src && \ 
-     pip3 install --no-cache-dir -r requirements.txt
+     #pip3 install --no-cache-dir -r requirements.txt
+     pip3 install --no-cache-dir -r  https://raw.githubusercontent.com/ckan/datapusher/${DATAPUSHER_VERSION}/requirements.txt
 
 RUN apk del .build-deps && \
     cp ${APP_DIR}/src/datapusher/deployment/*.* ${APP_DIR} && \
@@ -51,8 +48,10 @@ RUN apk del .build-deps && \
     rm -rf ${APP_DIR}/src
 
 # Create a local user and group to run the app
-RUN addgroup -g 92 -S www-data && \
-    adduser -u 92 -h /srv/app -H -D -S -G www-data www-data    
+RUN addgroup -g 92 -S ckan && \
+    adduser -u 92 -h /srv/app -H -D -S -G ckan ckan    
+
+USER ckan
 
 EXPOSE 8800
 CMD ["sh", "-c", \
