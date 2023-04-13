@@ -36,6 +36,7 @@ RUN apk add --no-cache tzdata \
         libmagic \
         curl \
         patch \
+        sed \
         sudo && \
     # Packages to build CKAN requirements and plugins
     apk add --no-cache --virtual .build-deps \
@@ -85,7 +86,7 @@ RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
 
 # Create a local user and group to run the app
 RUN addgroup -g 92 -S ckan && \
-    adduser -u 92 -h /srv/app -s /bin/bash -D -G ckan ckan
+    adduser -u 92 -h ${APP_DIR} -s /bin/bash -D -G ckan ckan
 
 # Create local storage folder
 RUN mkdir -p ${CKAN_STORAGE_PATH} && \
@@ -98,13 +99,13 @@ ADD https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/wsgi.py ${APP_DIR}
 # Create entrypoint directory for children image scripts
 ONBUILD RUN mkdir /docker-entrypoint.d
 
-RUN chown ckan -R /srv/app
+RUN chown ckan -R ${APP_DIR}
 
 RUN addgroup sudo && \
     adduser ckan sudo
 
 EXPOSE 5000
 
-HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit 1
+HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail ${CKAN_SITE_URL}/api/3/action/status_show || exit 1
 
-CMD ["/srv/app/start_ckan.sh"]
+CMD ["${APP_DIR}/start_ckan.sh"]
