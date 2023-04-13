@@ -108,4 +108,4 @@ EXPOSE 5000
 
 HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail ${CKAN_SITE_URL}/api/3/action/status_show || exit 1
 
-CMD ["${APP_DIR}/start_ckan.sh"]
+CMD $APP_DIR/start_ckan.sh
