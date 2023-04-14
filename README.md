@@ -13,7 +13,7 @@
 * [Docker](https://docs.docker.com/get-docker/)
 
 ## Overview
-Contains CKAN spatial images for the different components of CKAN Cloud and a Docker compose environment (based on [the Git repo of the official Docker images](https://github.com/ckan/ckan-docker-base)) for development and testing Open Data portals.
+Contains [CKAN spatial images](https://github.com/mjanez/ckan-docker-spatial/pkgs/container/ckan-base-spatial) for the different components of CKAN Cloud and a Docker compose environment (based on [the Git repo of the official Docker images](https://github.com/ckan/ckan-docker-base)) for development and testing Open Data portals.
 
 >**Warning**:<br>
 >This is a **custom base images of CKAN** with specific extensions for spatial data. For the official Git Repo, please have a look: [Pre-configured CKAN Docker images](https://github.com/ckan/ckan-docker-base).
@@ -22,14 +22,15 @@ Contains CKAN spatial images for the different components of CKAN Cloud and a Do
 
 The images will usually be used as a Docker Compose install in conjunction with other Docker images that make up the CKAN platform. 
 
-The custom CKAN Docker installation (with Spatial extensions) can be found here: [ckan-docker](https://github.com/mjanez/ckan-docker)
-
 The following CKAN versions are available at this repo:
 
 | CKAN Version | Type | Docker tag | Notes |
 | --- | --- | --- | --- |
-| 2.9.8 | custom image | [`ghcr.io/mjanez/ckan-base-spatial:ckan-2.9.8`](https://github.com/users/mjanez/packages/container/ckan-base-spatial/85367720?tag=ckan-2.9.8) | Includes dependencies for spatial capabilities. Compatible with ckanext-spatial. |
-| master | custom image | [`ghcr.io/mjanez/ckan-base-spatial:master`](https://github.com/users/mjanez/packages/container/ckan-base-spatial/85367720?tag=latest) | Latest version. Includes dependencies for spatial capabilities. Compatible with ckanext-spatial. |
+| 2.9.8 | custom image | `ghcr.io/mjanez/ckan-base-spatial:ckan-2.9.8` | Includes dependencies for spatial capabilities. Compatible with ckanext-spatial. |
+| master | custom image | `ghcr.io/mjanez/ckan-base-spatial:master` | Latest version. Includes dependencies for spatial capabilities. Compatible with ckanext-spatial. |
+
+>**Note**<br>
+>The custom CKAN Docker installation (with spatial extensions) can be found here: [`mjanez/ckan-docker`](https://github.com/mjanez/ckan-docker)
 
 ### Building and Pushing the images
 
