@@ -1,8 +1,8 @@
-name: Build & Push ckan-spatial:master Docker image 
+name: Build & Push ckan-spatial:master or Tag Docker image 
 
 on:
   push:
-    branches: [ 'master' ]
+    branches: ['master', 'ckan-*.*.*']
   pull_request:
     branches: [ 'master' ]
 
