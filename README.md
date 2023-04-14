@@ -13,7 +13,7 @@
 * [Docker](https://docs.docker.com/get-docker/)
 
 ## Overview
-Contains [CKAN spatial images](https://github.com/mjanez/ckan-docker-spatial/pkgs/container/ckan-base-spatial) for the different components of CKAN Cloud and a Docker compose environment (based on [the Git repo of the official Docker images](https://github.com/ckan/ckan-docker-base)) for development and testing Open Data portals.
+Contains [CKAN spatial images](https://github.com/mjanez/ckan-docker-spatial/pkgs/container/ckan-base-spatial) for the different components of CKAN Cloud and a [Docker compose spatial environment](https://github.com/mjanez/ckan-docker) for development and testing Open Data portals.
 
 >**Warning**:<br>
 >This is a **custom base images of CKAN** with specific extensions for spatial data. For the official Git Repo, please have a look: [Pre-configured CKAN Docker images](https://github.com/ckan/ckan-docker-base).
