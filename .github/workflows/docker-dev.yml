@@ -1,18 +1,18 @@
-name: Build & Push ckan-spatial:master or Tag Docker image 
+name: Build & Push ckan-spatial - ckan-*.*.*
 
 on:
   push:
-    branches: ['master', 'ckan-*.*.*']
-  pull_request:
-    branches: [ 'master' ]
+    branches:
+      - 'ckan-*.*.*-dev'
+      - '!dev/ckan-*.*.*-dev'
+      - '!ckan-*.*.*'
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: mjanez/ckan-base-spatial
 
-
 jobs: 
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       -
@@ -23,7 +23,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
       -
         name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       -
         name: Login to registry
         if: github.event_name != 'pull_request'
@@ -45,5 +45,5 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          context: ./ckan-master/base
-          file: ./ckan-master/base/Dockerfile
+          context: ./ckan
+          file: ./ckan/Dockerfile

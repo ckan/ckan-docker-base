@@ -1,4 +1,4 @@
-FROM mjanez/ckan-spatial:2.9.8
+FROM ghcr.io/mjanez/ckan-base-spatial:ckan-2.9.8
 
 
 ENV APP_DIR=/srv/app
