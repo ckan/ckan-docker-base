@@ -16,6 +16,8 @@ The following CKAN versions are available in base or dev forms. They are disting
 | 2.9.6 | dev image | `ckan/ckan-base:2.9.6-dev` |  |
 | 2.9.7 | base image | `ckan/ckan-base:2.9.7` |  |
 | 2.9.7 | dev image | `ckan/ckan-base:2.9.7-dev` |  |
+| 2.9.8 | base image | `ckan/ckan-base:ckan-2.9.8` |  |
+| 2.9.8 | dev image | `ckan/ckan-base:ckan-2.9.8-dev` |  |
 | master | base image | `ckan/ckan-base:master-c555a97` |  |
 | 2.10.0 | base image | `ckan/ckan-base:ckan-2.10.0` |  |
 | 2.10.0 | dev image | `ckan/ckan-base:ckan-2.10.0-dev` |  |
