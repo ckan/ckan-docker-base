@@ -74,7 +74,7 @@ ckan config-tool $SRC_DIR/ckan/test-core.ini \
     "ckan.redis.url = $TEST_CKAN_REDIS_URL"
 
 # Run the prerun script to init CKAN and create the default admin user
-sudo -u ckan -EH python3 prerun.py
+python3 prerun.py
 
 echo "Set up ckan.datapusher.api_token in the CKAN config file"
 ckan config-tool $CKAN_INI "ckan.datapusher.api_token=$(ckan -c $CKAN_INI user token add ckan_admin datapusher | tail -n 1 | tr -d '\t')"
@@ -95,5 +95,5 @@ fi
 # Start supervisord
 supervisord --configuration /etc/supervisord.conf &
 
-# Start the development server with automatic reload
-sudo -u ckan -EH ckan -c $CKAN_INI run -H 0.0.0.0
+# Start the development server as the ckan user with automatic reload
+su ckan -c "/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0"
