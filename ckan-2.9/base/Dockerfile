@@ -1,5 +1,5 @@
 FROM alpine:3.15
-ARG CKAN_VERSION=2.9.8
+ARG CKAN_VERSION=ckan-2.9.9
 
 # Internals, you probably don't need to change these
 ENV APP_DIR=/srv/app

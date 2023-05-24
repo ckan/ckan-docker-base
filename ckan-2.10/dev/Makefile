@@ -1,6 +1,6 @@
 .PHONY: all help build build-all push
 SHELL := /bin/bash
-CKAN_VERSION=2.10.0-dev
+CKAN_VERSION=2.10.1-dev
 TAG_NAME="ckan/ckan-base:$(CKAN_VERSION)"
 
 all: help
