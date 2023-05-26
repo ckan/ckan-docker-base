@@ -13,11 +13,11 @@ The following CKAN versions are available in base or dev forms. They are disting
 | 2.9.8 | base image | `ckan/ckan-base:ckan-2.9.8` |  |
 | 2.9.8 | dev image | `ckan/ckan-base:ckan-2.9.8-dev` |  |
 | 2.9.9 | base image | `ckan/ckan-base:ckan-2.9.9` |  |
-| 2.9.9 | dev image | `ckan/ckan-base:ckan-2.9.9-dev` |  |
+| 2.9.9 | dev image | `ckan/ckan-dev:ckan-2.9.9` |  |
 | 2.10.0 | base image | `ckan/ckan-base:ckan-2.10.0` |  |
 | 2.10.0 | dev image | `ckan/ckan-base:ckan-2.10.0-dev` |  |
 | 2.10.1 | base image | `ckan/ckan-base:ckan-2.10.1` |  |
-| 2.10.1 | dev image | `ckan/ckan-base:ckan-2.10.1-dev` |  |
+| 2.10.1 | dev image | `ckan/ckan-dev:ckan-2.10.1` |  |
 
 
 ### Building and Pushing the images
