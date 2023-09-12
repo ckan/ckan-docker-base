@@ -7,6 +7,7 @@ ENV SRC_DIR=/srv/app/src
 ENV CKAN_INI=${APP_DIR}/ckan.ini
 ENV PIP_SRC=${SRC_DIR}
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
+ENV CKAN_WEBASSETS_PATH=${CKAN_STORAGE_PATH}/webassets
 ENV GIT_URL=https://github.com/ckan/ckan.git
 # CKAN version to build
 ENV GIT_BRANCH=${CKAN_VERSION}
@@ -82,7 +83,9 @@ RUN addgroup -g 92 -S ckan && \
     adduser -u 92 -h /home/ckan -s /bin/bash -D -G ckan ckan
 
 # Create local storage folder
-RUN mkdir -p ${CKAN_STORAGE_PATH} && \
+RUN mkdir -p $CKAN_WEBASSETS_PATH && \
+    chown -R ckan:ckan $CKAN_WEBASSETS_PATH && \
+    mkdir -p ${CKAN_STORAGE_PATH} && \
     chown -R ckan:ckan ${CKAN_STORAGE_PATH}
 
 COPY setup/prerun.py ${APP_DIR}
