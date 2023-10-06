@@ -90,7 +90,7 @@ supervisord --configuration /etc/supervisord.conf &
 
 # Start the development server as the ckan user with automatic reload
 if [ "$USE_HTTPS_FOR_DEV" = true ] ; then
-    su ckan -c "/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0 -C host.cert -K host.key"
+    su ckan -c "/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0 -C unsafe.cert -K unsafe.key"
 else
     su ckan -c "/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0"
 fi
