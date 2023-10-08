@@ -47,4 +47,4 @@ Same with the CKAN 2.10.1 base and dev images
 
 ### Scanning the images for vulnerabilites
 
-<to do - provide details on the process of how we scan images - probably using [Synk Advisor](https://docs.docker.com/develop/scan-images/)>
+<to do - provide details on the process of how we scan images - probably Docker Scout>
