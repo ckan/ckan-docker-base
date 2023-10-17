@@ -12,7 +12,7 @@ ENV GIT_URL=https://github.com/ckan/ckan.git
 ENV GIT_BRANCH=${CKAN_VERSION}
 # Customize these on the .env file if needed
 ENV CKAN_SITE_URL=http://localhost:5000
-ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher envvars
+ENV CKAN__PLUGINS image_view text_view recline_view datastore envvars
 
 # UWSGI options
 ENV UWSGI_HARAKIRI=50
