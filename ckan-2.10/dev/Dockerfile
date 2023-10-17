@@ -4,15 +4,6 @@ FROM ckan/ckan-base:2.10.1
 ENV APP_DIR=/srv/app
 ENV SRC_EXTENSIONS_DIR=/srv/app/src_extensions
 
-# Set up timezone
-ENV TZ=UTC
-RUN echo ${TZ} > /etc/timezone
-
-# Make sure both files are not exactly the same
-RUN if ! [ /usr/share/zoneinfo/${TZ} -ef /etc/localtime ]; then \
-        cp /usr/share/zoneinfo/${TZ} /etc/localtime ;\
-    fi ;
-
 # Install packages needed by the dev requirements
 RUN apk add --no-cache libffi-dev
 
