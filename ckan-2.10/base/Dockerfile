@@ -69,6 +69,9 @@ COPY setup/supervisord.conf /etc
 RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
     cd ${SRC_DIR}/ckan && \
     cp who.ini ${APP_DIR} && \
+    # Workaround, can be removed when 2.10.2 is released
+    # https://github.com/ckan/ckan/pull/7864
+    sed -i 's/pyyaml==6.0/pyyaml==6.0.1/' requirements.txt && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
     pip3 install -e git+https://github.com/okfn/ckanext-envvars.git#egg=ckanext-envvars && \
