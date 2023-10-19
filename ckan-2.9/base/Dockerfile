@@ -21,6 +21,7 @@ ENV UWSGI_HARAKIRI=50
 WORKDIR ${APP_DIR}
 
 # Set up timezone
+RUN apk add --no-cache tzdata
 RUN echo ${TZ} > /etc/timezone
 # Make sure both files are not exactly the same
 RUN if ! [ /usr/share/zoneinfo/${TZ} -ef /etc/localtime ]; then \
@@ -29,8 +30,7 @@ RUN if ! [ /usr/share/zoneinfo/${TZ} -ef /etc/localtime ]; then \
 
 
 # Install necessary packages to run CKAN
-RUN apk add --no-cache tzdata \
-        git \
+RUN apk add --no-cache git \
         gettext \
         postgresql-client \
         python3 \
@@ -78,6 +78,14 @@ COPY setup/supervisord.conf /etc
 RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
     cd ${SRC_DIR}/ckan && \
     cp who.ini ${APP_DIR} && \
+    # Workaround, can be removed when 2.10.2 is released
+    # https://github.com/ckan/ckan/pull/7864
+    #sed -i 's/pyyaml==6.0/pyyaml==6.0.1/' requirements.txt && \
+    # begin workaround
+    sed -i '/pyyaml==5.4.1/d' requirements.txt && \
+    echo 'Cython < 3.0' > /tmp/constraint.txt && \
+    PIP_CONSTRAINT=/tmp/constraint.txt pip3 install PyYAML==5.4.1 && \
+    # end workaround
     pip3 install -r requirement-setuptools.txt && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
