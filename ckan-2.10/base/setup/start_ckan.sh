@@ -1,11 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
-# Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
-ckan config-tool $CKAN_INI ckan.datapusher.api_token=xxx
+if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
+    # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
+    echo "Setting a temporary value for ckan.datapusher.api_token"
+    ckan config-tool $CKAN_INI ckan.datapusher.api_token=xxx
+fi
 
 # Set up the Secret key used by Beaker and Flask
 # This can be overriden using a CKAN___BEAKER__SESSION__SECRET env var
-if grep -E "beaker.session.secret ?= ?$" ckan.ini
+if grep -qE "beaker.session.secret ?= ?$" ckan.ini
 then
     echo "Setting beaker.session.secret in ini file"
     ckan config-tool $CKAN_INI "beaker.session.secret=$(python3 -c 'import secrets; print(secrets.token_urlsafe())')"
@@ -18,9 +21,6 @@ fi
 # Run the prerun script to init CKAN and create the default admin user
 python3 prerun.py
 
-echo "Set up ckan.datapusher.api_token in the CKAN config file"
-ckan config-tool $CKAN_INI "ckan.datapusher.api_token=$(ckan -c $CKAN_INI user token add ckan_admin datapusher | tail -n 1 | tr -d '\t')"
-
 # Run any startup scripts provided by images extending this one
 if [[ -d "/docker-entrypoint.d" ]]
 then
@@ -30,7 +30,6 @@ then
             *.py)     echo "$0: Running init file $f"; python3 "$f"; echo ;;
             *)        echo "$0: Ignoring $f (not an sh or py file)" ;;
         esac
-        echo
     done
 fi
 
