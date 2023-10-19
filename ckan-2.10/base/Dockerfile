@@ -2,6 +2,7 @@ FROM alpine:3.17
 ARG CKAN_VERSION=ckan-2.10.1
 
 # Internals, you probably don't need to change these
+ENV TZ=UTC
 ENV APP_DIR=/srv/app
 ENV SRC_DIR=/srv/app/src
 ENV CKAN_INI=${APP_DIR}/ckan.ini
@@ -18,6 +19,14 @@ ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher envvars
 ENV UWSGI_HARAKIRI=50
 
 WORKDIR ${APP_DIR}
+
+# Set up timezone
+RUN echo ${TZ} > /etc/timezone
+# Make sure both files are not exactly the same
+RUN if ! [ /usr/share/zoneinfo/${TZ} -ef /etc/localtime ]; then \
+        cp /usr/share/zoneinfo/${TZ} /etc/localtime ;\
+    fi ;
+
 
 # Install necessary packages to run CKAN
 RUN apk add --no-cache tzdata \
