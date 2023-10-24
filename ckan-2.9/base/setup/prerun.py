@@ -33,6 +33,7 @@ def check_main_db_connection(retry=None):
     conn_str = os.environ.get("CKAN_SQLALCHEMY_URL")
     if not conn_str:
         print("[prerun] CKAN_SQLALCHEMY_URL not defined, not checking db")
+        return
     return check_db_connection(conn_str, retry)
 
 
@@ -41,6 +42,7 @@ def check_datastore_db_connection(retry=None):
     conn_str = os.environ.get("CKAN_DATASTORE_WRITE_URL")
     if not conn_str:
         print("[prerun] CKAN_DATASTORE_WRITE_URL not defined, not checking db")
+        return
     return check_db_connection(conn_str, retry)
 
 
@@ -83,12 +85,12 @@ def check_solr_connection(retry=None):
         time.sleep(10)
         check_solr_connection(retry=retry - 1)
     else:
-        import re                                                                                                                                                      
-        conn_info = connection.read()                                                                                                                                  
-        schema_name = json.loads(conn_info)                                                                                                                            
-        if 'ckan' in schema_name['name']:                                                                                                                              
-            print('[prerun] Succesfully connected to solr and CKAN schema loaded')                                                                                     
-        else:                                                                                                                                                          
+        import re
+        conn_info = connection.read()
+        schema_name = json.loads(conn_info)
+        if 'ckan' in schema_name['name']:
+            print('[prerun] Succesfully connected to solr and CKAN schema loaded')
+        else:
             print('[prerun] Succesfully connected to solr, but CKAN schema not found')
 
 
@@ -216,4 +218,3 @@ if __name__ == "__main__":
         init_datastore_db()
         check_solr_connection()
         create_sysadmin()
-        
