@@ -21,16 +21,15 @@ ENV UWSGI_HARAKIRI=50
 WORKDIR ${APP_DIR}
 
 # Set up timezone
+RUN apk add --no-cache tzdata
 RUN echo ${TZ} > /etc/timezone
 # Make sure both files are not exactly the same
 RUN if ! [ /usr/share/zoneinfo/${TZ} -ef /etc/localtime ]; then \
         cp /usr/share/zoneinfo/${TZ} /etc/localtime ;\
     fi ;
 
-
 # Install necessary packages to run CKAN
-RUN apk add --no-cache tzdata \
-        git \
+RUN apk add --no-cache git \
         gettext \
         postgresql-client \
         python3 \
