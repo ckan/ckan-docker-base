@@ -2,8 +2,10 @@
 SHELL := /bin/bash
 
 CKAN_VERSION=2.9.9
-
+CKAN_VERSION_MAJOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f1)
+CKAN_VERSION_MINOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f2)
 TAG_NAME="ckan/ckan-base:$(CKAN_VERSION)"
+ALT_TAG_NAME="ckan/ckan-base:$(CKAN_VERSION_MAJOR).$(CKAN_VERSION_MINOR)"
 
 all: help
 help:
@@ -11,7 +13,13 @@ help:
 
 
 build:	## Build a CKAN 2.x.x image , `make build`
+	echo "Building $(TAG_NAME) image"
 	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(TAG_NAME) .
+	echo "Tagging $(TAG_NAME) image as $(ALT_TAG_NAME)"
+	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(ALT_TAG_NAME) .
 
 push: ## Push a CKAN 2.x.x image to the DockerHub registry, `make push`
+	echo "Pushing $(TAG_NAME) image"
 	docker push $(TAG_NAME)
+	echo "Pushing $(ALT_TAG_NAME) image"
+	docker push $(ALT_TAG_NAME)
