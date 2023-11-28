@@ -13,10 +13,8 @@ help:
 
 
 build:	## Build a CKAN 2.x.x image , `make build`
-	echo "Building $(TAG_NAME) image"
-	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(TAG_NAME) .
-	echo "Tagging $(TAG_NAME) image as $(ALT_TAG_NAME)"
-	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(ALT_TAG_NAME) .
+	echo "Building $(TAG_NAME) and $(ALT_TAG_NAME) images"
+	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(TAG_NAME) -t $(ALT_TAG_NAME) .
 
 push: ## Push a CKAN 2.x.x image to the DockerHub registry, `make push`
 	echo "Pushing $(TAG_NAME) image"

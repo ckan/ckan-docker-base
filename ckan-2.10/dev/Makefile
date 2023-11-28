@@ -11,10 +11,8 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 build:	## Build a CKAN 2.x-dev image , `make build`
-	echo "Building $(TAG_NAME) image"
-	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(TAG_NAME) .
-	echo "Tagging $(TAG_NAME) image as $(ALT_TAG_NAME)"
-	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(ALT_TAG_NAME) .
+	echo "Building $(TAG_NAME) and $(ALT_TAG_NAME) images"
+	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(TAG_NAME) -t $(ALT_TAG_NAME) .
 
 push: ## Push a CKAN 2.x-dev image to the DockerHub registry, `make push`
 	echo "Pushing $(TAG_NAME) image"
