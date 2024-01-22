@@ -18,6 +18,7 @@ RUN apk add --no-cache \
     uwsgi-http \
     uwsgi-corerouter \
     uwsgi-python \
+    libmagic \
     # Temporary packages to build DataPusher requirements
     && apk add --no-cache --virtual .build-deps \
     gcc \
@@ -26,7 +27,6 @@ RUN apk add --no-cache \
     python3-dev \
     libxml2-dev \
     libxslt-dev \
-    libmagic \
     openssl-dev \
     cargo
 
