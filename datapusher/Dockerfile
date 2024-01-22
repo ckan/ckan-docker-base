@@ -12,13 +12,13 @@ RUN apk add --no-cache \
     py3-pip \
     py3-wheel \
     libffi-dev \
+    libmagic \
     libressl-dev \
     libxslt \
     uwsgi \
     uwsgi-http \
     uwsgi-corerouter \
     uwsgi-python \
-    libmagic \
     # Temporary packages to build DataPusher requirements
     && apk add --no-cache --virtual .build-deps \
     gcc \
