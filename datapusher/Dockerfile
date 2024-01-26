@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     py3-pip \
     py3-wheel \
     libffi-dev \
+    libmagic \
     libressl-dev \
     libxslt \
     uwsgi \
@@ -26,7 +27,6 @@ RUN apk add --no-cache \
     python3-dev \
     libxml2-dev \
     libxslt-dev \
-    libmagic \
     openssl-dev \
     cargo
 
