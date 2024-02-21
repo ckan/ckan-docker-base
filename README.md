@@ -10,10 +10,12 @@ The following CKAN versions are available in base or dev forms. They are disting
 
 | CKAN Version | Type | Docker tag | Notes |
 | --- | --- | --- | --- |
-| 2.9.9 | base image | `ckan/ckan-base:2.9.9` |  |
-| 2.9.9 | dev image | `ckan/ckan-dev:2.9.9` |  |
-| 2.10.1 | base image | `ckan/ckan-base:2.10.1` |  |
-| 2.10.1 | dev image | `ckan/ckan-dev:2.10.1` |  |
+| 2.9.x  | base image | `ckan/ckan-base:2.9`, `ckan/ckan-base:2.9.9` |  |
+| 2.9.x  | dev image  | `ckan/ckan-dev:2.9`, `ckan/ckan-dev:2.9.9` |  |
+| 2.10.x | base image | `ckan/ckan-base:2.10`,`ckan/ckan-base:2.10.3` |  |
+| 2.10.x | dev image  | `ckan/ckan-dev:2.10`, `ckan/ckan-dev:2.10.3` |  |
+| master | base image | `ckan/ckan-base:master` | Built daily, do not use in production |
+| master | dev image  | `ckan/ckan-dev:master` | Built daily, do not use in production |
 
 Older CKAN versions might be available as [image tags](https://hub.docker.com/r/ckan/ckan-base/tags) but note that these are not supported as per [CKAN's release policy](https://docs.ckan.org/en/latest/maintaining/releases.html#supported-versions).
 
@@ -23,19 +25,19 @@ Older CKAN versions might be available as [image tags](https://hub.docker.com/r/
 The images can be built locally and tagged appropriately so they can then be pushed into the CKAN DockerHub repo
 assuming you have the correct permission to do so
 
-For CKAN 2.9.9 base images, go to the `ckan-2.9/base` directory and use the Makefile included:
+For CKAN 2.9 base images, go to the `ckan-2.9/base` directory and use the Makefile included:
 
     cd ckan-2.9/base
     make build (can then use locally)
     make push (if you have enough credentials)
 
-For CKAN 2.9.9 dev images, go to the `ckan-2.9/dev` directory and use the Makefile included:
+For CKAN 2.9 dev images, go to the `ckan-2.9/dev` directory and use the Makefile included:
 
     cd ckan-2.9/dev
     make build (can then use locally)
     make push (if you have enough credentials)
 
-Same with the CKAN 2.10.1 base and dev images 
+Same with the CKAN 2.10 base and dev images 
 
     cd ckan-2.10/base
     make build
