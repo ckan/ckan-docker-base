@@ -1,7 +1,7 @@
 .PHONY: all help build build-all push
 SHELL := /bin/bash
 
-CKAN_VERSION=2.9.10
+CKAN_VERSION=2.9.11
 CKAN_VERSION_MAJOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f1)
 CKAN_VERSION_MINOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f2)
 TAG_NAME="ckan/ckan-base:$(CKAN_VERSION)"

@@ -10,10 +10,10 @@ The following CKAN versions are available in base or dev forms. They are disting
 
 | CKAN Version | Type | Docker tag | Notes |
 | --- | --- | --- | --- |
-| 2.9.x  | base image | `ckan/ckan-base:2.9`, `ckan/ckan-base:2.9.9` |  |
-| 2.9.x  | dev image  | `ckan/ckan-dev:2.9`, `ckan/ckan-dev:2.9.9` |  |
-| 2.10.x | base image | `ckan/ckan-base:2.10`,`ckan/ckan-base:2.10.3` |  |
-| 2.10.x | dev image  | `ckan/ckan-dev:2.10`, `ckan/ckan-dev:2.10.3` |  |
+| 2.9.x  | base image | `ckan/ckan-base:2.9`, `ckan/ckan-base:2.9.11` |  |
+| 2.9.x  | dev image  | `ckan/ckan-dev:2.9`, `ckan/ckan-dev:2.9.11` |  |
+| 2.10.x | base image | `ckan/ckan-base:2.10`,`ckan/ckan-base:2.10.4` |  |
+| 2.10.x | dev image  | `ckan/ckan-dev:2.10`, `ckan/ckan-dev:2.10.4` |  |
 | master | base image | `ckan/ckan-base:master` | Built daily, do not use in production |
 | master | dev image  | `ckan/ckan-dev:master` | Built daily, do not use in production |
 

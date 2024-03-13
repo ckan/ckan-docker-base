@@ -1,4 +1,4 @@
-FROM ckan/ckan-base:2.9.10
+FROM ckan/ckan-base:2.9.11
 
 
 ENV APP_DIR=/srv/app
