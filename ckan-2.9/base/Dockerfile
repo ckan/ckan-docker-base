@@ -1,5 +1,5 @@
 FROM alpine:3.15
-ARG CKAN_VERSION=ckan-2.9.9
+ARG CKAN_VERSION=ckan-2.9.10
 
 # Internals, you probably don't need to change these
 ENV TZ=UTC
@@ -82,7 +82,7 @@ RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
     # https://github.com/ckan/ckan/pull/7864
     #sed -i 's/pyyaml==6.0/pyyaml==6.0.1/' requirements.txt && \
     # begin workaround
-    sed -i '/pyyaml==5.4.1/d' requirements.txt && \
+    #sed -i '/pyyaml==5.4.1/d' requirements.txt && \
     echo 'Cython < 3.0' > /tmp/constraint.txt && \
     PIP_CONSTRAINT=/tmp/constraint.txt pip3 install PyYAML==5.4.1 && \
     # end workaround
