@@ -92,13 +92,21 @@ then
     done
 fi
 
+CKAN_RUN="/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0"
+CKAN_OPTIONS=""
+if [ "$USE_DEBUGPY_FOR_DEV" = true ] ; then
+    pip install debugpy
+    CKAN_RUN="/usr/bin/python -m debugpy --listen 0.0.0.0:5678 $CKAN_RUN"
+    CKAN_OPTIONS="$CKAN_OPTIONS --disable-reloader"
+fi
+
+if [ "$USE_HTTPS_FOR_DEV" = true ] ; then
+    CKAN_OPTIONS="$CKAN_OPTIONS -C unsafe.cert -K unsafe.key"
+fi
+
 # Start the development server as the ckan user with automatic reload
 while true; do
-    if [ "$USE_HTTPS_FOR_DEV" = true ] ; then
-        su ckan -c "/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0 -C unsafe.cert -K unsafe.key"
-    else
-        su ckan -c "/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0"
-    fi
+    su ckan -c "$CKAN_RUN $CKAN_OPTIONS"
     echo Exit with status $?. Restarting.
     sleep 2
 done
