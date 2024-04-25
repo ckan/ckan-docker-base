@@ -1,0 +1,124 @@
+FROM ubuntu:22.04
+
+ARG CKAN_VERSION=ckan-2.10.4
+
+# Internals, you probably don't need to change these
+ENV TZ=UTC
+ENV APP_DIR=/srv/app
+ENV SRC_DIR=/srv/app/src
+ENV CKAN_INI=${APP_DIR}/ckan.ini
+ENV PIP_SRC=${SRC_DIR}
+ENV CKAN_STORAGE_PATH=/var/lib/ckan
+ENV GIT_URL=https://github.com/ckan/ckan.git
+
+# CKAN version to build
+ENV GIT_BRANCH=${CKAN_VERSION}
+
+# Customize these in the environment (.env) file if needed
+ENV CKAN_SITE_URL=http://localhost:5000
+ENV CKAN__PLUGINS image_view text_view recline_view datastore envvars
+
+# UWSGI options
+ENV UWSGI_HARAKIRI=50
+
+WORKDIR ${APP_DIR}
+
+# Set up timezone
+RUN echo ${TZ} > /etc/timezone
+
+# Set LC_ALL=en_US.UTF-8 will ensure that all locale-dependent operations in the current environment 
+# will use English language and United States cultural conventions with UTF-8 character encoding
+ENV LC_ALL=en_US.UTF-8
+
+# Set the locale          
+RUN apt-get update
+RUN apt-get install --no-install-recommends -y locales
+RUN sed -i "/$LC_ALL/s/^# //g" /etc/locale.gen
+RUN dpkg-reconfigure --frontend=noninteractive locales 
+RUN update-locale LANG=${LC_ALL}
+
+# Install apt-utils 
+RUN apt-get install --no-install-recommends -y apt-utils
+
+# Install necessary packages to run CKAN
+# The default gcc on Ubuntu 22.04 is 11.4.0 - don't need to install
+# No default g++ package in Ubuntu 22.04 so installing it (same version number as gcc ie: 11.4.0)
+# Default python3 version is 3.10.12
+# wget is needed for the internal healthcheck (run from docker compose / docker daemon)
+RUN apt-get install --no-install-recommends -y \   
+        autoconf \
+        automake \
+        ca-certificates \
+        curl \
+        g++ \
+        git \      
+        libpq-dev \
+        linux-headers-generic \           	    
+	    libtool \
+        libffi-dev \
+        libxml2-dev \
+        libxslt-dev \
+        libpcre3-dev \
+        libpcre3 \
+        make \
+        patch \   
+        python3-dev \
+        python3 \
+        wget
+             
+# Link python to python3
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# Create the src directory
+RUN mkdir -p ${SRC_DIR}
+
+# Install pip
+RUN curl -o ${SRC_DIR}/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
+    python ${SRC_DIR}/get-pip.py
+
+# Install supervisord and clean up pip install
+RUN pip3 install supervisor && \
+mkdir /etc/supervisord.d && \
+rm -rf ${SRC_DIR}/get-pip.py
+
+COPY setup/supervisord.conf /etc
+
+# Build CKAN and requirements
+RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
+    cd ${SRC_DIR}/ckan && \
+    cp who.ini ${APP_DIR} && \
+    pip3 install --no-binary markdown -r requirements.txt && \
+    # Install CKAN envvars to support loading config from environment variables
+    pip3 install -e git+https://github.com/okfn/ckanext-envvars.git#egg=ckanext-envvars && \
+    # Create and update CKAN config
+    ckan generate config ${CKAN_INI} && \
+    ckan config-tool ${CKAN_INI} "beaker.session.secret = " && \
+    ckan config-tool ${CKAN_INI} "ckan.plugins = ${CKAN__PLUGINS}"
+
+# Install uwsgi and required libraries
+RUN apt-get install --no-install-recommends -y \   
+        uwsgi \
+        uwsgi-core \
+        uwsgi-plugin-python3
+
+# Create a local user and group to run the app
+RUN groupadd -g 92 ckan && \
+    useradd -rm -d /srv/app -s /bin/bash -g ckan -u 92 ckan
+
+# Create local storage folder
+RUN mkdir -p ${CKAN_STORAGE_PATH} && \
+    chown -R ckan:ckan ${CKAN_STORAGE_PATH}
+
+COPY setup/prerun.py ${APP_DIR}
+COPY setup/start_ckan.sh ${APP_DIR}
+ADD https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/wsgi.py ${APP_DIR}
+RUN chmod 644 ${APP_DIR}/wsgi.py
+
+# Create entrypoint directory for children image scripts
+ONBUILD RUN mkdir /docker-entrypoint.d
+
+EXPOSE 5000
+
+HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit CMD ["/srv/app/start_ckan.sh"]
+
+CMD ["/srv/app/start_ckan.sh"]
