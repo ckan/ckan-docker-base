@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM alpine:3.19
 ARG CKAN_VERSION=ckan-2.10.4
 
 # Internals, you probably don't need to change these
@@ -61,20 +61,19 @@ RUN apk add --no-cache git \
         linux-headers \
         openssl-dev \
         libffi-dev \
-        cargo && \
-    # Create SRC_DIR
+        cargo
+    
+RUN apk add --no-cache supervisor && \ 
     mkdir -p ${SRC_DIR} && \
-    # Install pip, supervisord and uwsgi
-    curl -o ${SRC_DIR}/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
-    python3 ${SRC_DIR}/get-pip.py && \
-    pip3 install supervisor && \
-    mkdir /etc/supervisord.d && \
-    rm -rf ${SRC_DIR}/get-pip.py
+    mkdir /etc/supervisord.d
 
 COPY setup/supervisord.conf /etc
 
 # Install CKAN
-RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
+RUN python3 -m venv ${APP_DIR} && \
+    source ${APP_DIR}/bin/activate && \
+    cd ${SRC_DIR} && \
+    pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
     cd ${SRC_DIR}/ckan && \
     cp who.ini ${APP_DIR} && \
     pip3 install --no-binary markdown -r requirements.txt && \
