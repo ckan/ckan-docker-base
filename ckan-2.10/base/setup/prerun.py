@@ -96,7 +96,7 @@ def check_solr_connection(retry=None):
 
 def init_db():
 
-    db_command = ["ckan", "-c", ckan_ini, "db", "init"]
+    db_command = ["ckan", "-c", ckan_ini, "db", "upgrade"]
     print("[prerun] Initializing or upgrading db - start")
     try:
         subprocess.check_output(db_command, stderr=subprocess.STDOUT)
