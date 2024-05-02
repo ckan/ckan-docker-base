@@ -1,8 +1,7 @@
 #!/bin/bash
 
-APP_DIR=/srv/app
-
-# Source the Python virtual environment    
+# Activate the Python virtual environment
+APP_DIR=/srv/app   
 source $APP_DIR/bin/activate
 
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
@@ -39,6 +38,7 @@ then
 fi
 
 # Set the common uwsgi options
+# As CKAN is now installed in a Python virtual environment, we need to specify the --virtualenv option
 UWSGI_OPTS="--plugins http,python \
             --socket /tmp/uwsgi.sock \
             --wsgi-file /srv/app/wsgi.py \

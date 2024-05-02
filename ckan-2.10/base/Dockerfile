@@ -61,15 +61,17 @@ RUN apk add --no-cache git \
         linux-headers \
         openssl-dev \
         libffi-dev \
-        cargo
-    
+        cargo && \
+    # Create SRC_DIR
+    mkdir -p ${SRC_DIR}
+
+# Install and configure supervisor
 RUN apk add --no-cache supervisor && \ 
-    mkdir -p ${SRC_DIR} && \
     mkdir /etc/supervisord.d
 
 COPY setup/supervisord.conf /etc
 
-# Install CKAN
+# Install CKAN into a Python virtual environment
 RUN python3 -m venv ${APP_DIR} && \
     source ${APP_DIR}/bin/activate && \
     cd ${SRC_DIR} && \

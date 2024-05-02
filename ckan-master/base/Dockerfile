@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM alpine:3.19
 ARG CKAN_VERSION=master
 
 # Internals, you probably don't need to change these
@@ -63,23 +63,21 @@ RUN apk add --no-cache git \
         libffi-dev \
         cargo && \
     # Create SRC_DIR
-    mkdir -p ${SRC_DIR} && \
-    # Install pip, supervisord and uwsgi
-    curl -o ${SRC_DIR}/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
-    python3 ${SRC_DIR}/get-pip.py && \
-    pip3 install supervisor && \
-    mkdir /etc/supervisord.d && \
-    rm -rf ${SRC_DIR}/get-pip.py
+    mkdir -p ${SRC_DIR}
+
+# Install and configure supervisor
+RUN apk add --no-cache supervisor && \ 
+    mkdir /etc/supervisord.d
 
 COPY setup/supervisord.conf /etc
 
-# Install CKAN
-RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
+# Install CKAN into a Python virtual environment
+RUN python3 -m venv ${APP_DIR} && \
+    source ${APP_DIR}/bin/activate && \
+    cd ${SRC_DIR} && \
+    pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
     cd ${SRC_DIR}/ckan && \
     cp who.ini ${APP_DIR} && \
-    # Workaround, can be removed when this is merged
-    # https://github.com/ckan/ckan/pull/7936
-    sed -i 's/backports-zoneinfo==0.2.1//' requirements.txt && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
     pip3 install -e git+https://github.com/okfn/ckanext-envvars.git#egg=ckanext-envvars && \
