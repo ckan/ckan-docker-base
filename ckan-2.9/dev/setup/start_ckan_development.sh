@@ -8,6 +8,10 @@ for i in $SRC_EXTENSIONS_DIR/*
 do
     if [ -d $i ];
     then
+    	if [ -d $SRC_DIR/$(basename $i) ];
+        then
+            pip uninstall -y "$(basename $i)"
+        fi
 
         if [ -f $i/pip-requirements.txt ];
         then
