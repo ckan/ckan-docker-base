@@ -41,6 +41,13 @@ do
             echo "Found setup.py file in $i"
             cd $APP_DIR
         fi
+        if [ -f $i/pyproject.toml ];
+        then
+            cd $i
+            pip install -e .
+            echo "Found pyproject.toml file in $i"
+            cd $APP_DIR
+        fi
 
         # Point `use` in test.ini to location of `test-core.ini`
         if [ -f $i/test.ini ];
