@@ -1,3 +1,4 @@
+# use the official Python 3.10 (bookworm slim) image as the base image
 FROM python:3.10-slim
 
 # Tag passed through via the Makefile

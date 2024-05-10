@@ -1,14 +1,22 @@
 .PHONY: all help build build-all push
 SHELL := /bin/bash
 CKAN_VERSION=master
+PYTHON_VERSION=3.10
+PYTHON.DOCKERFILE=Dockerfile.python.$(PYTHON_VERSION)
 TAG_NAME="ckan/ckan-base:$(CKAN_VERSION)"
+PYTHON_TAG_NAME="ckan/ckan-base:$(CKAN_VERSION).python.$(PYTHON_VERSION)"
 
 all: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-build:	## Build a CKAN 2.x.x image , `make build`
-	docker build --build-arg="CKAN_VERSION=$(CKAN_VERSION)" -t $(TAG_NAME) .
+build:	## Build a CKAN master image , `make build`
+	echo "Building $(TAG_NAME) and $(PYTHON_TAG_NAME) images"
+	#docker build --build-arg="CKAN_VERSION=$(CKAN_VERSION)" -t $(TAG_NAME) .
+	docker build --build-arg="CKAN_TAG=$(CKAN_VERSION)" -t $(PYTHON_TAG_NAME) -f $(PYTHON.DOCKERFILE) --no-cache .
 
-push: ## Push a CKAN 2.x.x image to the DockerHub registry, `make push`
+push: ## Push a CKAN master image to the DockerHub registry, `make push`
+	echo "Pushing $(TAG_NAME) image"
 	docker push $(TAG_NAME)
+	echo "Pushing $(PYTHON_TAG_NAME) image"
+	docker push $(PYTHON_TAG_NAME)
