@@ -21,10 +21,10 @@ These CKAN versions are built using Python 2.10 (bookworm slim) as the base imag
 
 | CKAN Version | Type | Docker tag | Notes |
 | --- | --- | --- | --- |
-| 2.10.x | base image | `ckan/ckan-base:2.10`,`ckan/ckan-base:2.10.4.python.3.10` |  |
-| 2.10.x | dev image  | `ckan/ckan-dev:2.10`, `ckan/ckan-dev:2.10.4.python.3.10` |  |
-| master | base image | `ckan/ckan-base:master` | `ckan/ckan-base:master.python.3.10` | Built daily, do not use in production |
-| master | dev image  | `ckan/ckan-dev:master` |  `ckan/ckan-dev:master.python.3.10` | Built daily, do not use in production |
+| 2.10.x | base image | `ckan/ckan-base:2.10.python.3.10`,`ckan/ckan-base:2.10.4.python.3.10` |  |
+| 2.10.x | dev image  | `ckan/ckan-dev:2.10.python.3.10`, `ckan/ckan-dev:2.10.4.python.3.10` |  |
+| master | base image | `ckan/ckan-base:master.python.3.10` | Built daily, do not use in production |
+| master | dev image  | `ckan/ckan-dev:master.python.3.10` | Built daily, do not use in production |
 
 
 Older CKAN versions might be available as [image tags](https://hub.docker.com/r/ckan/ckan-base/tags) but note that these are not supported as per [CKAN's release policy](https://docs.ckan.org/en/latest/maintaining/releases.html#supported-versions).
