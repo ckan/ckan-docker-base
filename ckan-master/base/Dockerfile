@@ -40,8 +40,6 @@ RUN apk add --no-cache git \
         uwsgi-http \
         uwsgi-corerouter \
         uwsgi-python \
-        py3-gevent \
-        uwsgi-gevent \
         libmagic \
         curl \
         patch \
