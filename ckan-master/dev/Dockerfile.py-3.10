@@ -1,4 +1,4 @@
-FROM ckan/ckan-base:2.10.4.python.3.10
+FROM ckan/ckan-base:master.py-3.10
 
 # Tag passed through via the Makefile
 ARG CKAN_TAG=${CKAN_TAG}
@@ -17,6 +17,6 @@ RUN mkdir -p ${SRC_EXTENSIONS_DIR}
 # These are used to run https on development mode
 COPY setup/unsafe.cert setup/unsafe.key ${APP_DIR}
 
-COPY setup/start_ckan_development.python.3.10.sh ${APP_DIR}/start_ckan_development.sh
+COPY setup/start_ckan_development.py-3.10.sh ${APP_DIR}/start_ckan_development.sh
 
 CMD ["/srv/app/start_ckan_development.sh"]

@@ -2,9 +2,9 @@
 SHELL := /bin/bash
 CKAN_VERSION=master
 PYTHON_VERSION=3.10
-PYTHON.DOCKERFILE=Dockerfile.python.$(PYTHON_VERSION)
+PYTHON.DOCKERFILE=Dockerfile.py-$(PYTHON_VERSION)
 TAG_NAME="ckan/ckan-dev:$(CKAN_VERSION)"
-PYTHON_TAG_NAME="ckan/ckan-dev:$(CKAN_VERSION).python.$(PYTHON_VERSION)"
+PYTHON_TAG_NAME="ckan/ckan-dev:$(CKAN_VERSION).py-$(PYTHON_VERSION)"
 
 all: help
 help:

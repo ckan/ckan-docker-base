@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.10-slim-bookworm
 
 # Tag passed through via the Makefile
 ARG CKAN_TAG=${CKAN_TAG}
@@ -77,7 +77,7 @@ RUN groupadd -g 92 ckan && \
     chown -R ckan:ckan ${CKAN_STORAGE_PATH}
 
 COPY setup/prerun.py ${APP_DIR}
-COPY setup/start_ckan.python.3.10.sh ${APP_DIR}/start_ckan.sh
+COPY setup/start_ckan.py-3.10.sh ${APP_DIR}/start_ckan.sh
 ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_TAG}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
 

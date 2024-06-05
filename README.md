@@ -8,23 +8,16 @@ The official CKAN Docker install is located here: [ckan-docker](https://github.c
 
 The following CKAN versions are available in base or dev forms. They are distinguished from one another using different Docker image tags:
 
-| CKAN Version | Type | Docker tag | Notes |
-| --- | --- | --- | --- |
-| 2.9.x  | base image | `ckan/ckan-base:2.9`, `ckan/ckan-base:2.9.11` |  |
-| 2.9.x  | dev image  | `ckan/ckan-dev:2.9`, `ckan/ckan-dev:2.9.11` |  |
-| 2.10.x | base image | `ckan/ckan-base:2.10`,`ckan/ckan-base:2.10.4` |  |
-| 2.10.x | dev image  | `ckan/ckan-dev:2.10`, `ckan/ckan-dev:2.10.4` |  |
-| master | base image | `ckan/ckan-base:master` | Built daily, do not use in production |
-| master | dev image  | `ckan/ckan-dev:master` | Built daily, do not use in production |
-
-These CKAN versions are built using Python 2.10 (bookworm slim) as the base image.
-
-| CKAN Version | Type | Docker tag | Notes |
-| --- | --- | --- | --- |
-| 2.10.x | base image | `ckan/ckan-base:2.10.python.3.10`,`ckan/ckan-base:2.10.4.python.3.10` |  |
-| 2.10.x | dev image  | `ckan/ckan-dev:2.10.python.3.10`, `ckan/ckan-dev:2.10.4.python.3.10` |  |
-| master | base image | `ckan/ckan-base:master.python.3.10` | Built daily, do not use in production |
-| master | dev image  | `ckan/ckan-dev:master.python.3.10` | Built daily, do not use in production |
+| CKAN Version | Type |  Base image | Docker tag | Notes |
+| --- | --- | --- | --- | --- |
+| 2.9.x  | base image | `alpine:3.15`, `ckan/ckan-base:2.9.11` |  |
+| 2.9.x  | dev image  | `alpine:3.15`, `ckan/ckan-dev:2.9.11` |  |
+| 2.10.x | base image | `alpine:3.17`,`ckan/ckan-base:2.10.4` |  |
+| 2.10.x | dev image  | `alpine:3.17`, `ckan/ckan-dev:2.10.4` |  |
+| 2.10.x | base image |  `python:3.10-slim-bookworm` | `ckan/ckan-base:2.10-py3.10`,`ckan/ckan-base:2.10-py3.10`  |  |
+| 2.10.x | dev image |  `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.10-py3.10`,`ckan/ckan-dev:2.10-py3.10`  |  |
+| master | base image |  `python:3.10-slim-bookworm` | `ckan/ckan-base:master-py3.10`,`ckan/ckan-base:master-py3.10`  | Built daily, do not use in production |
+| master | dev image |  `python:3.10-slim-bookworm` | `ckan/ckan-dev:master-py3.10`,`ckan/ckan-dev:master-py3.10`  | Built daily, do not use in production |
 
 
 Older CKAN versions might be available as [image tags](https://hub.docker.com/r/ckan/ckan-base/tags) but note that these are not supported as per [CKAN's release policy](https://docs.ckan.org/en/latest/maintaining/releases.html#supported-versions).
