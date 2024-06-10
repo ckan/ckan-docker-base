@@ -1,4 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+
+APP_DIR=/srv/app
+
+# Source the Python virtual environment    
+source $APP_DIR/bin/activate
 
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
@@ -57,9 +62,9 @@ ckan config-tool $CKAN_INI -s DEFAULT "debug = true"
 
 # Set up the Secret key used by Beaker and Flask
 # This can be overriden using a CKAN___BEAKER__SESSION__SECRET env var
-if grep -E "SECRET_KEY ?= ?$" ckan.ini
+if grep -qE "SECRET_KEY ?= ?$" ckan.ini
 then
-    echo "Setting secrets in ini file"
+    echo "Setting SECRET_KEY in ini file"
     ckan config-tool $CKAN_INI "SECRET_KEY=$(python3 -c 'import secrets; print(secrets.token_urlsafe())')"
     ckan config-tool $CKAN_INI "WTF_CSRF_SECRET_KEY=$(python3 -c 'import secrets; print(secrets.token_urlsafe())')"
     JWT_SECRET=$(python3 -c 'import secrets; print("string:" + secrets.token_urlsafe())')
@@ -96,7 +101,7 @@ then
     done
 fi
 
-CKAN_RUN="/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0"
+CKAN_RUN="ckan -c $CKAN_INI run -H 0.0.0.0"
 CKAN_OPTIONS=""
 if [ "$USE_DEBUGPY_FOR_DEV" = true ] ; then
     pip install debugpy
@@ -110,7 +115,7 @@ fi
 
 # Start the development server as the ckan user with automatic reload
 while true; do
-    su ckan -c "$CKAN_RUN $CKAN_OPTIONS"
+    su ckan -c "source /srv/app/bin/activate && $CKAN_RUN $CKAN_OPTIONS"
     echo Exit with status $?. Restarting.
     sleep 2
 done
