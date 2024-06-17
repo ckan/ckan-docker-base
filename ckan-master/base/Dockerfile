@@ -78,8 +78,10 @@ RUN groupadd -g 92 ckan && \
 
 COPY setup/prerun.py ${APP_DIR}
 COPY setup/start_ckan.sh ${APP_DIR}
+COPY setup/entrypoint.sh ${APP_DIR}
 ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_TAG}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
+RUN chmod +x ${APP_DIR}/entrypoint.sh
 
 # Create entrypoint directory for children image scripts
 ONBUILD RUN mkdir /docker-entrypoint.d
@@ -88,4 +90,5 @@ EXPOSE 5000
 
 HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit CMD ["/srv/app/start_ckan.sh"]
 
+ENTRYPOINT ["/srv/app/entrypoint.sh"]
 CMD ["/srv/app/start_ckan.sh"]
