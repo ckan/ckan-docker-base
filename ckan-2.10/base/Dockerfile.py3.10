@@ -6,8 +6,9 @@ ARG CKAN_TAG=${CKAN_TAG}
 
 ENV TZ=UTC
 ENV APP_DIR=/srv/app
-ENV SRC_DIR=${APP_DIR}/src
-ENV CKAN_INI=${APP_DIR}/ckan.ini
+ENV VENV_DIR=${APP_DIR}/venv
+ENV SRC_DIR=${VENV_DIR}/src
+ENV CKAN_INI=${VENV_DIR}/ckan.ini
 ENV PIP_SRC=${SRC_DIR}
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
 ENV GIT_URL=https://github.com/ckan/ckan.git
