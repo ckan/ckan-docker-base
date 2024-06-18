@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 CKAN_VERSION=2.10.4
 PYTHON_VERSION=3.10
-PYTHON.DOCKERFILE=Dockerfile.py-$(PYTHON_VERSION)
+PYTHON.DOCKERFILE=Dockerfile.py$(PYTHON_VERSION)
 CKAN_VERSION_MAJOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f1)
 CKAN_VERSION_MINOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f2)
 TAG_NAME="ckan/ckan-dev:$(CKAN_VERSION)"
