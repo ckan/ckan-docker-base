@@ -5,7 +5,7 @@ ARG CKAN_TAG=${CKAN_TAG}
 
 ENV TZ=UTC
 ENV APP_DIR=/srv/app
-ENV SRC_DIR=${APP_DIR}src
+ENV SRC_DIR=${APP_DIR}/src
 ENV CKAN_INI=${APP_DIR}/ckan.ini
 ENV PIP_SRC=${SRC_DIR}
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
@@ -56,7 +56,8 @@ COPY setup/supervisord.conf /etc
 
 # Install uwsgi, the CKAN application, the dependency packages for CKAN plus some confiquration
 RUN python3 -m venv ${APP_DIR} && \
-    . ${APP_DIR}/bin/activate && \
+    . ${VENV_DIR}/bin/activate && \
+    pip3 install -U pip && \
     pip3 install uwsgi && \
     cd ${SRC_DIR} && \
     pip3 install -e git+${GIT_URL}@${CKAN_TAG}#egg=ckan && \
