@@ -3,7 +3,7 @@
 APP_DIR=/srv/app
 
 # Source the Python virtual environment    
-source $APP_DIR/bin/activate
+# source $APP_DIR/bin/activate
 
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
@@ -122,7 +122,8 @@ fi
 
 # Start the development server as the ckan user with automatic reload
 while true; do
-    su ckan -c "source /srv/app/bin/activate && $CKAN_RUN $CKAN_OPTIONS"
+    #su ckan -c "source /srv/app/bin/activate && $CKAN_RUN $CKAN_OPTIONS"
+    su ckan -c "$CKAN_RUN $CKAN_OPTIONS"
     echo Exit with status $?. Restarting.
     sleep 2
 done

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $VENV_DIR/bin/activate
+#source $VENV_DIR/bin/activate
 
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)

@@ -3,7 +3,7 @@
 APP_DIR=/srv/app
 
 # Source the Python virtual environment    
-source $APP_DIR/bin/activate
+#source $APP_DIR/bin/activate
 
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
@@ -41,7 +41,6 @@ fi
 # Set the common uwsgi options
 UWSGI_OPTS="--socket /tmp/uwsgi.sock \
             --wsgi-file /srv/app/wsgi.py \
-            -H /srv/app \
             --module wsgi:application \
             --uid 92 --gid 92 \
             --http 0.0.0.0:5000 \
