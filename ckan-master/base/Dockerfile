@@ -55,8 +55,6 @@ RUN apt-get install --no-install-recommends -y \
 COPY setup/supervisord.conf /etc
 
 # Install uwsgi, the CKAN application, the dependency packages for CKAN plus some confiquration
-#RUN python3 -m venv ${APP_DIR} && \
-#    . ${VENV_DIR}/bin/activate && \
 RUN pip3 install -U pip && \
     pip3 install uwsgi && \
     cd ${SRC_DIR} && \

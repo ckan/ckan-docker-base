@@ -2,9 +2,6 @@
 
 APP_DIR=/srv/app
 
-# Source the Python virtual environment    
-# source $APP_DIR/bin/activate
-
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
     echo "Setting a temporary value for ckan.datapusher.api_token"
