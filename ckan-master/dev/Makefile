@@ -16,3 +16,4 @@ build: ## Build a CKAN master dev image , `make build`
 push: ## Push a CKAN master dev image to the DockerHub registry, `make push`
 	echo "Pushing $(TAG_NAME) image"
 	docker push $(TAG_NAME)
+	docker push $(PYTHON_TAG_NAME)
