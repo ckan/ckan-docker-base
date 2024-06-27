@@ -1,9 +1,6 @@
 #!/bin/bash
 
-APP_DIR=/srv/app
-
-# Source the Python virtual environment    
-#source $APP_DIR/bin/activate
+#source $VENV_DIR/bin/activate
 
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
@@ -13,10 +10,10 @@ fi
 
 # Set up the Secret key used by Beaker and Flask
 # This can be overriden using a CKAN___BEAKER__SESSION__SECRET env var
-if grep -qE "SECRET_KEY ?= ?$" ckan.ini
+if grep -qE "beaker.session.secret ?= ?$" ckan.ini
 then
-    echo "Setting SECRET_KEY in ini file"
-    ckan config-tool $CKAN_INI "SECRET_KEY=$(python3 -c 'import secrets; print(secrets.token_urlsafe())')"
+    echo "Setting beaker.session.secret in ini file"
+    ckan config-tool $CKAN_INI "beaker.session.secret=$(python3 -c 'import secrets; print(secrets.token_urlsafe())')"
     ckan config-tool $CKAN_INI "WTF_CSRF_SECRET_KEY=$(python3 -c 'import secrets; print(secrets.token_urlsafe())')"
     JWT_SECRET=$(python3 -c 'import secrets; print("string:" + secrets.token_urlsafe())')
     ckan config-tool $CKAN_INI "api_token.jwt.encode.secret=${JWT_SECRET}"
@@ -54,7 +51,7 @@ then
     # Start supervisord
     supervisord --configuration /etc/supervisord.conf &
     # Start uwsgi/
-    ln -s /srv/app/bin/ckan /usr/local/sbin/ckan
+    ln -s $VENV_DIR/bin/ckan /usr/local/sbin/ckan
     uwsgi $UWSGI_OPTS
 else
   echo "[prerun] failed...not starting CKAN."

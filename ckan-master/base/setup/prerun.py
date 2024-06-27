@@ -96,18 +96,18 @@ def check_solr_connection(retry=None):
 
 def init_db():
 
-    db_command = ["ckan", "-c", ckan_ini, "db", "upgrade"]
+    db_command = ["ckan", "-c", ckan_ini, "db", "init"]
     print("[prerun] Initializing or upgrading db - start")
     try:
         subprocess.check_output(db_command, stderr=subprocess.STDOUT)
         print("[prerun] Initializing or upgrading db - end")
     except subprocess.CalledProcessError as e:
-        if "OperationalError" in e.output:
-            print(e.output)
+        if "OperationalError" in str(e.output):
             print("[prerun] Database not ready, waiting a bit before exit...")
             time.sleep(5)
             sys.exit(1)
         else:
+            print(str(e))
             print(e.output)
             raise e
 
@@ -140,7 +140,6 @@ def init_datastore_db():
         connection.commit()
 
         print("[prerun] Initializing datastore db - end")
-        print(datastore_perms.stdout.read())
     except psycopg2.Error as e:
         print("[prerun] Could not initialize datastore")
         print(str(e))
