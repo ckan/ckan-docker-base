@@ -17,18 +17,22 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build ckan-base master
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ckan-master/base
           file: ckan-master/base/Dockerfile
           push: true
+          build-args: |
+            CKAN_TAG=master
           tags: |
             ckan/ckan-base:master
       - name: Build ckan-dev master
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ckan-master/dev
           file: ckan-master/dev/Dockerfile
           push: true
+          build-args: |
+            CKAN_TAG=master
           tags: |
             ckan/ckan-dev:master
