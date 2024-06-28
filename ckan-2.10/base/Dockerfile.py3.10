@@ -76,7 +76,7 @@ RUN groupadd -g 92 ckan && \
     chown -R ckan:ckan ${CKAN_STORAGE_PATH}
 
 COPY setup/prerun.py ${APP_DIR}
-COPY setup/start_ckan-py3.10.sh ${APP_DIR}/start_ckan.sh
+COPY setup/start_ckan.sh ${APP_DIR}
 ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_TAG}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
 
