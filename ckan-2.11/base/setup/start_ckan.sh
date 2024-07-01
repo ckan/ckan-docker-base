@@ -1,10 +1,5 @@
 #!/bin/bash
 
-APP_DIR=/srv/app
-
-# Source the Python virtual environment    
-#source $APP_DIR/bin/activate
-
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
     echo "Setting a temporary value for ckan.datapusher.api_token"
@@ -39,11 +34,12 @@ then
 fi
 
 # Set the common uwsgi options
-UWSGI_OPTS="--socket /tmp/uwsgi.sock \
+UWSGI_OPTS="--plugins http,python \
+            --socket /tmp/uwsgi.sock \
             --wsgi-file /srv/app/wsgi.py \
             --module wsgi:application \
             --uid 92 --gid 92 \
-            --http 0.0.0.0:5000 \
+            --http [::]:5000 \
             --master --enable-threads \
             --lazy-apps \
             -p 2 -L -b 32768 --vacuum \
@@ -53,8 +49,7 @@ if [ $? -eq 0 ]
 then
     # Start supervisord
     supervisord --configuration /etc/supervisord.conf &
-    # Start uwsgi/
-    ln -s /srv/app/bin/ckan /usr/local/sbin/ckan
+    # Start uwsgi
     uwsgi $UWSGI_OPTS
 else
   echo "[prerun] failed...not starting CKAN."

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-APP_DIR=/srv/app
-
 if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
     echo "Setting a temporary value for ckan.datapusher.api_token"
@@ -119,7 +117,6 @@ fi
 
 # Start the development server as the ckan user with automatic reload
 while true; do
-    #su ckan -c "source /srv/app/bin/activate && $CKAN_RUN $CKAN_OPTIONS"
     su ckan -c "$CKAN_RUN $CKAN_OPTIONS"
     echo Exit with status $?. Restarting.
     sleep 2
