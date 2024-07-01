@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
+    # Add ckan.datapusher.api_token to the CKAN config file (updated with corrected value later)
+    echo "Setting a temporary value for ckan.datapusher.api_token"
+    ckan config-tool $CKAN_INI ckan.datapusher.api_token=xxx
+fi
+
 # Install any local extensions in the src_extensions volume
 echo "Looking for local extensions to install..."
 echo "Extension dir contents:"
@@ -96,7 +102,7 @@ then
     done
 fi
 
-CKAN_RUN="/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0"
+CKAN_RUN="ckan -c $CKAN_INI run -H 0.0.0.0"
 CKAN_OPTIONS=""
 if [ "$USE_DEBUGPY_FOR_DEV" = true ] ; then
     pip install debugpy
