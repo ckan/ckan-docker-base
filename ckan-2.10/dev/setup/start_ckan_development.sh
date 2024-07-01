@@ -103,7 +103,7 @@ then
     done
 fi
 
-CKAN_RUN="/usr/bin/ckan -c $CKAN_INI run -H 0.0.0.0"
+CKAN_RUN="ckan -c $CKAN_INI run -H 0.0.0.0"
 CKAN_OPTIONS=""
 if [ "$USE_DEBUGPY_FOR_DEV" = true ] ; then
     pip install debugpy
