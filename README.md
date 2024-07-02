@@ -2,9 +2,7 @@
 
 This is the Git repo of the official Docker images for [CKAN](https://github.com/ckan/ckan/).
 
-The images will usually be used as a Docker Compose install in conjunction with other Docker images that make up the CKAN platform. 
-
-The official CKAN Docker install is located here: [ckan-docker](https://github.com/ckan/ckan-docker)
+The images will usually be used as a Docker Compose install in conjunction with other Docker images that make up the CKAN platform. The official CKAN Docker install is located here: [ckan-docker](https://github.com/ckan/ckan-docker)
 
 The following CKAN versions are available in base or dev forms. They are distinguished from one another using different Docker image tags:
 
@@ -12,8 +10,8 @@ The following CKAN versions are available in base or dev forms. They are disting
 | --- | --- | --- | --- | --- |
 | 2.9.x  | base image | `alpine:3.15`               | `ckan/ckan-base:2.9.11`, `ckan/ckan-base:2.9`           |  |
 | 2.9.x  | dev image  | `alpine:3.15`               | `ckan/ckan-dev:2.9.11`, `ckan/ckan-dev:2.9`             |  |
-| 2.9.x | base image | `python:3.9-slim-bookworm` | `ckan/ckan-base:2.9-py3.9`, `ckan/ckan-base:2.9.4-py3.9`                            |  |
-| 2.9.x | dev image  | `python:3.9-slim-bookworm` | `ckan/ckan-dev:2.9-py3.9`, `ckan/ckan-dev:2.9.4-py3.9`                             |  |
+| 2.9.x  | base image | `python:3.9-slim-bookworm`  | `ckan/ckan-base:2.9-py3.9`, `ckan/ckan-base:2.9.4-py3.9`                            |  |
+| 2.9.x  | dev image  | `python:3.9-slim-bookworm`  | `ckan/ckan-dev:2.9-py3.9`, `ckan/ckan-dev:2.9.4-py3.9`                             |  |
 | 2.10.x | base image | `alpine:3.17`               | `ckan/ckan-base:2.10.4`, `ckan/ckan-base:2.10`          |  |
 | 2.10.x | dev image  | `alpine:3.17`               | `ckan/ckan-dev:2.10.4`, `ckan/ckan-dev:2.10`            |  |
 | 2.10.x | base image | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.10-py3.10`, `ckan/ckan-base:2.10.4-py3.10`                            |  |
@@ -47,17 +45,4 @@ For CKAN 2.10 dev images, go to the `ckan-2.10/dev` directory and use the Makefi
     make build (can then use locally)
     make push (if you have enough credentials)
 
-
-Same with the CKAN master base and dev images 
-
-    cd master/base
-    make build
-    make push
-
-    cd master/dev
-    make build
-    make push
-
-### Scanning the images for vulnerabilites
-
-<to do - provide details on the process of how we scan images - probably Docker Scout>
+The process is the same for other CKAN versions and the master branch (`ckan-master`).
