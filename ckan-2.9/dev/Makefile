@@ -1,10 +1,14 @@
 .PHONY: all help build build-all push
 SHELL := /bin/bash
 CKAN_VERSION=2.9.11
+PYTHON_VERSION=3.9
+PYTHON.DOCKERFILE=Dockerfile.py$(PYTHON_VERSION)
 CKAN_VERSION_MAJOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f1)
 CKAN_VERSION_MINOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f2)
 TAG_NAME="ckan/ckan-dev:$(CKAN_VERSION)"
 ALT_TAG_NAME="ckan/ckan-dev:$(CKAN_VERSION_MAJOR).$(CKAN_VERSION_MINOR)"
+PYTHON_TAG_NAME="ckan/ckan-dev:$(CKAN_VERSION)-py$(PYTHON_VERSION)"
+PYTHON_ALT_TAG_NAME="ckan/ckan-dev:$(CKAN_VERSION_MAJOR).$(CKAN_VERSION_MINOR)-py$(PYTHON_VERSION)"
 
 all: help
 help:
@@ -13,11 +17,14 @@ help:
 build:	## Build a CKAN 2.x-dev image , `make build`
 	echo "Building $(TAG_NAME) and $(ALT_TAG_NAME) images"
 	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(TAG_NAME) -t $(ALT_TAG_NAME) .
+	docker build --build-arg="CKAN_TAG=ckan-$(CKAN_VERSION)" -t $(PYTHON_TAG_NAME) -t $(PYTHON_ALT_TAG_NAME) -f $(PYTHON.DOCKERFILE) --no-cache .
 
 push: ## Push a CKAN 2.x-dev image to the DockerHub registry, `make push`
 	echo "Pushing $(TAG_NAME) image"
 	docker push $(TAG_NAME)
 	echo "Pushing $(ALT_TAG_NAME) image"
 	docker push $(ALT_TAG_NAME)
-
-
+	echo "Pushing $(PYTHON_TAG_NAME) image"
+	docker push $(PYTHON_TAG_NAME)
+	echo "Pushing $(PYTHON_ALT_TAG_NAME) image"
+	docker push $(PYTHON_ALT_TAG_NAME)
