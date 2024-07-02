@@ -1,0 +1,59 @@
+name: Reusable CKAN Docker images build and push
+
+on:
+  workflow_call:
+    inputs:
+      ckan-major-version:
+        required: true
+        type: string
+      ckan-version:
+        required: true
+        type: string
+      base-tags:
+        required: true
+        type: string
+      dev-tags:
+        required: true
+        type: string
+      docker-file:
+        required: false
+        default: 'Dockerfile'
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build ${{ inputs.ckan-major-version }} base
+        uses: docker/build-push-action@v6
+        with:
+          context: ckan-${{ inputs.ckan-major-version }}/base
+          file: ckan-${{ inputs.ckan-major-version }}/base/${{ inputs.docker-file }}
+          push: true
+          build-args: |
+            CKAN_VERSION=${{ inputs.ckan-version }}
+          tags: ${{ inputs.base-tags }}
+
+      - name: Build ${{ inputs.ckan-major-version }} dev
+        uses: docker/build-push-action@v6
+        with:
+          context: ckan-${{ inputs.ckan-major-version }}/dev
+          file: ckan-${{ inputs.ckan-major-version }}/dev/${{ inputs.docker-file }}
+          push: true
+          build-args: |
+            CKAN_VERSION=${{ inputs.ckan-version }}
+          tags: ${{ inputs.dev-tags }}
