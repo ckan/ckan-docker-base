@@ -1,7 +1,7 @@
 FROM python:3.10-slim-bookworm
 
 # Tag passed through via the Makefile
-ARG CKAN_TAG=${CKAN_TAG}
+ARG CKAN_VERSION=${CKAN_VERSION}
 
 ENV TZ=UTC
 ENV APP_DIR=/srv/app
@@ -58,7 +58,7 @@ COPY setup/supervisord.conf /etc
 RUN pip3 install -U pip && \
     pip3 install uwsgi && \
     cd ${SRC_DIR} && \
-    pip3 install -e git+${GIT_URL}@${CKAN_TAG}#egg=ckan && \
+    pip3 install -e git+${GIT_URL}@${CKAN_VERSION}#egg=ckan && \
     cd ckan && \
     cp who.ini ${APP_DIR} && \
     pip3 install --no-binary markdown -r requirements.txt && \
@@ -77,7 +77,7 @@ RUN groupadd -g 92 ckan && \
 
 COPY setup/prerun.py ${APP_DIR}
 COPY setup/start_ckan.sh ${APP_DIR}
-ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_TAG}/wsgi.py ${APP_DIR}
+ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_VERSION}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
 
 # Create entrypoint directory for children image scripts

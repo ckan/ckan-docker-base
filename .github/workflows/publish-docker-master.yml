@@ -23,7 +23,7 @@ jobs:
           file: ckan-master/base/Dockerfile
           push: true
           build-args: |
-            CKAN_TAG=master
+            CKAN_VERSION=master
           tags: |
             ckan/ckan-base:master
       - name: Build ckan-dev master
@@ -33,6 +33,6 @@ jobs:
           file: ckan-master/dev/Dockerfile
           push: true
           build-args: |
-            CKAN_TAG=master
+            CKAN_VERSION=master
           tags: |
             ckan/ckan-dev:master
