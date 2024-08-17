@@ -37,7 +37,7 @@ RUN update-locale LANG=${LC_ALL}
 # Install system libraries
 RUN apt-get install --no-install-recommends -y \
         apt-utils \
-        procps \
+        procps \    
         git \
         libpq-dev \
         g++ \

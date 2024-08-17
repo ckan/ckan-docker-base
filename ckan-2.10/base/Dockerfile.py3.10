@@ -70,10 +70,10 @@ RUN pip3 install -U pip && \
     ckan config-tool ${CKAN_INI} "ckan.plugins = ${CKAN__PLUGINS}"
 
 # Create a local user and group plus set up the storage path
-RUN groupadd -g 92 ckan && \
-    useradd -rm -d /srv/app -s /bin/bash -g ckan -u 92 ckan && \
+RUN groupadd -g 92 ckan-sys && \
+    useradd -rm -d /srv/app -s /bin/bash -g ckan-sys -u 92 ckan-sys && \
     mkdir -p ${CKAN_STORAGE_PATH} && \
-    chown -R ckan:ckan ${CKAN_STORAGE_PATH}
+    chown -R ckan-sys:ckan-sys ${CKAN_STORAGE_PATH}
 
 COPY setup/prerun.py ${APP_DIR}
 COPY setup/start_ckan.sh ${APP_DIR}
@@ -86,11 +86,11 @@ RUN chmod 644 ${APP_DIR}/wsgi.py
 # Create entrypoint directory for children image scripts
 #ONBUILD RUN mkdir /docker-entrypoint.d
 RUN mkdir -p /docker-entrypoint.d && chmod 755 /docker-entrypoint.d
-RUN chown -R ckan:ckan ${APP_DIR} && \
-    chown -R ckan:ckan /docker-entrypoint.d && \
-    chown -R ckan:ckan /usr/local
+RUN chown -R ckan-sys:ckan-sys ${APP_DIR} && \
+    chown -R ckan-sys:ckan-sys /docker-entrypoint.d && \
+    chown -R ckan-sys:ckan-sys /usr/local
 
-USER ckan
+USER ckan-sys
 
 EXPOSE 5000
 
