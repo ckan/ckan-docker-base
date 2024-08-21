@@ -7,9 +7,9 @@ jobs:
     uses: ./.github/workflows/reusable-docker-publish.yml
     with:
       ckan-major-version: "2.10"
-      ckan-version: "ckan-2.10.4"
-      base-tags: "ckan/ckan-base:2.10,ckan/ckan-base:2.10.4"
-      dev-tags: "ckan/ckan-dev:2.10,ckan/ckan-dev:2.10.4"
+      ckan-version: "ckan-2.10.5"
+      base-tags: "ckan/ckan-base:2.10,ckan/ckan-base:2.10.5"
+      dev-tags: "ckan/ckan-dev:2.10,ckan/ckan-dev:2.10.5"
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

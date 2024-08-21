@@ -7,10 +7,9 @@ jobs:
     uses: ./.github/workflows/reusable-docker-publish.yml
     with:
       ckan-major-version: "2.11"
-      ckan-version: "dev-v2.11"
-      # TODO: minor version
-      base-tags: "ckan/ckan-base:2.11,ckan/ckan-base:2.11-py3.10"
-      dev-tags: "ckan/ckan-dev:2.11,ckan/ckan-dev:2.11-py3.10"
+      ckan-version: "ckan-2.11.0"
+      base-tags: "ckan/ckan-base:2.11,ckan/ckan-base:2.11.0,ckan/ckan-base:2.11-py3.10,ckan/ckan-base:2.11.0-py3.10"
+      dev-tags: "ckan/ckan-dev:2.11,ckan/ckan-dev:2.11.0,ckan/ckan-dev:2.11-py3.10,ckan/ckan-dev:2.11.0-py3.10"
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
