@@ -60,7 +60,6 @@ RUN pip3 install -U pip && \
     cd ${SRC_DIR} && \
     pip3 install -e git+${GIT_URL}@${CKAN_VERSION}#egg=ckan && \
     cd ckan && \
-    cp who.ini ${APP_DIR} && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
     pip3 install -e git+https://github.com/okfn/ckanext-envvars.git#egg=ckanext-envvars && \
