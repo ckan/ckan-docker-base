@@ -1,6 +1,6 @@
 .PHONY: all help build build-all push
 SHELL := /bin/bash
-CKAN_VERSION=2.10.4
+CKAN_VERSION=2.10.5
 PYTHON_VERSION=3.10
 PYTHON.DOCKERFILE=Dockerfile.py$(PYTHON_VERSION)
 CKAN_VERSION_MAJOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f1)
