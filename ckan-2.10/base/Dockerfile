@@ -1,5 +1,5 @@
 FROM alpine:3.17
-ARG CKAN_VERSION=ckan-2.10.4
+ARG CKAN_VERSION=ckan-2.10.5
 
 # Internals, you probably don't need to change these
 ENV TZ=UTC
@@ -40,8 +40,6 @@ RUN apk add --no-cache git \
         uwsgi-http \
         uwsgi-corerouter \
         uwsgi-python \
-        py3-gevent \
-        uwsgi-gevent \
         libmagic \
         curl \
         patch \
