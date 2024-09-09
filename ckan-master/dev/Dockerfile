@@ -6,17 +6,18 @@ ARG CKAN_VERSION=${CKAN_VERSION}
 ENV APP_DIR=/srv/app
 ENV SRC_EXTENSIONS_DIR=${APP_DIR}/src_extensions
 
+USER root 
+
 # Install CKAN dev requirements
-#RUN . ${APP_DIR}/bin/activate && \
 RUN cd ${SRC_DIR}/ckan && \ 
 pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${CKAN_VERSION}/dev-requirements.txt
 
-# Create folder for local extensions sources
-RUN mkdir -p ${SRC_EXTENSIONS_DIR}
+COPY --chown=ckan-sys:ckan-sys setup/unsafe.cert setup/unsafe.key setup/start_ckan_development.sh ${APP_DIR}
 
-# These are used to run https on development mode
-COPY setup/unsafe.cert setup/unsafe.key ${APP_DIR}
+# Update local directories
+RUN mkdir -p ${SRC_EXTENSIONS_DIR} /var/lib/ckan && \
+    chown -R ckan:ckan-sys ${SRC_EXTENSIONS_DIR} ${APP_DIR}/ckan.ini /var/lib/ckan/
 
-COPY setup/start_ckan_development.sh ${APP_DIR}
+USER ckan
 
 CMD ["/srv/app/start_ckan_development.sh"]

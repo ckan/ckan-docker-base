@@ -200,7 +200,7 @@ def create_sysadmin():
         # We're running as root before pivoting to uwsgi and dropping privs
         data_dir = "%s/storage" % os.environ['CKAN_STORAGE_PATH']
 
-        command = ["chown", "-R", "ckan:ckan", data_dir]
+        command = ["chown", "-R", "ckan:ckan-sys", data_dir]
         subprocess.call(command)
         print("[prerun] Ensured storage directory is owned by ckan")
 

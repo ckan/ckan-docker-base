@@ -89,7 +89,7 @@ RUN addgroup -g 92 -S ckan && \
 
 # Create local storage folder
 RUN mkdir -p ${CKAN_STORAGE_PATH} && \
-    chown -R ckan:ckan ${CKAN_STORAGE_PATH}
+    chown -R ckan:ckan-sys ${CKAN_STORAGE_PATH}
 
 COPY setup/prerun.py ${APP_DIR}
 COPY setup/start_ckan.sh ${APP_DIR}
