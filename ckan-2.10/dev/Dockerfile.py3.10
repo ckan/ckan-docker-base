@@ -16,9 +16,11 @@ COPY --chown=ckan-sys:ckan-sys setup/unsafe.cert setup/unsafe.key setup/start_ck
 
 # Update local directories
 RUN mkdir -p ${SRC_EXTENSIONS_DIR} /var/lib/ckan && \
-    chown -R ckan:ckan-sys ${SRC_EXTENSIONS_DIR} ${APP_DIR}/ckan.ini /var/lib/ckan/
+    chown -R ckan-sys:ckan-sys ${SRC_EXTENSIONS_DIR} && \
+    chown -R ckan:ckan-sys /var/lib/ckan/ && \
+    chmod 775 ${SRC_EXTENSIONS_DIR}
 
 USER ckan
 
-#CMD ["/bin/bash"]
 CMD ["/srv/app/start_ckan_development.sh"]
+#CMD [ "/bin/bash" ]
