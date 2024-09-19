@@ -1,0 +1,60 @@
+name: Check the vulnerbilities of the master image using Docker Scout
+on:
+  schedule:
+    - cron: '0 10 * * *' # Run once a day at 9am
+
+jobs:
+  docker-scout-scan:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 3: Login to DockerHub
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 4: Build the ckan-base image
+      - name: Build ckan-base master
+        uses: docker/build-push-action@v6
+        with:
+          context: ckan-master/base
+          file: ckan-master/base/Dockerfile
+          push: false
+          build-args: |
+            CKAN_VERSION=master
+          tags: |
+            ckan/ckan-base:master
+          labels: |
+            com.docker-scout.vcs-ref=${{ github.sha }}
+
+      # Step 5: Build the ckan-dev image
+      - name: Build ckan-dev master
+        uses: docker/build-push-action@v6
+        with:
+          context: ckan-master/dev
+          file: ckan-master/dev/Dockerfile
+          push: false
+          build-args: |
+            CKAN_VERSION=master
+          tags: |
+            ckan/ckan-dev:master
+          labels: |
+            com.docker-scout.vcs-ref=${{ github.sha }}
+
+      # Step 6: Scan the ckan-base image using Docker Scout
+      - name: Scan ckan-base with Docker Scout
+        run: docker scout cves ckan/ckan-base:master
+
+      # Step 7: Scan the ckan-dev image using Docker Scout
+      - name: Scan ckan-dev with Docker Scout
+        run: docker scout cves ckan/ckan-dev:master
+
