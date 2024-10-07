@@ -1,5 +1,5 @@
 FROM alpine:3.17
-ARG CKAN_VERSION=ckan-2.10.4
+ARG CKAN_VERSION=ckan-2.10.5
 
 # Internals, you probably don't need to change these
 ENV TZ=UTC
@@ -40,8 +40,6 @@ RUN apk add --no-cache git \
         uwsgi-http \
         uwsgi-corerouter \
         uwsgi-python \
-        py3-gevent \
-        uwsgi-gevent \
         libmagic \
         curl \
         patch \
@@ -78,7 +76,7 @@ RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
     cd ${SRC_DIR}/ckan && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
-    pip3 install -e git+https://github.com/okfn/ckanext-envvars.git#egg=ckanext-envvars && \
+    pip3 install -e git+https://github.com/okfn/ckanext-envvars.git@v0.0.6#egg=ckanext-envvars && \
     # Create and update CKAN config
     ckan generate config ${CKAN_INI} && \
     ckan config-tool ${CKAN_INI} "beaker.session.secret = " && \

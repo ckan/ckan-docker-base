@@ -1,4 +1,4 @@
-FROM ckan/ckan-base:master
+FROM ckan/ckan-base:2.11.0
 
 # Tag passed through via the Makefile
 ARG CKAN_VERSION=${CKAN_VERSION}
