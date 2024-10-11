@@ -117,7 +117,7 @@ fi
 
 # Start the development server as the ckan user with automatic reload
 while true; do
-    su ckan -c "$CKAN_RUN $CKAN_OPTIONS"
+    $CKAN_RUN $CKAN_OPTIONS
     echo Exit with status $?. Restarting.
     sleep 2
 done

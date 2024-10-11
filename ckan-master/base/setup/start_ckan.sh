@@ -34,11 +34,9 @@ then
 fi
 
 # Set the common uwsgi options
-UWSGI_OPTS="--plugins http,python \
-            --socket /tmp/uwsgi.sock \
+UWSGI_OPTS="--socket /tmp/uwsgi.sock \
             --wsgi-file /srv/app/wsgi.py \
             --module wsgi:application \
-            --uid 92 --gid 92 \
             --http [::]:5000 \
             --master --enable-threads \
             --lazy-apps \
