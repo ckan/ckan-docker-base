@@ -44,8 +44,6 @@ UWSGI_OPTS="--socket /tmp/uwsgi.sock \
 
 if [ $? -eq 0 ]
 then
-    # Start supervisord
-    supervisord --configuration /etc/supervisord.conf &
     # Start uwsgi
     uwsgi $UWSGI_OPTS
 else
