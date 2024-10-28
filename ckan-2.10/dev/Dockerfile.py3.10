@@ -23,4 +23,3 @@ RUN mkdir -p ${SRC_EXTENSIONS_DIR} /var/lib/ckan && \
 USER ckan
 
 CMD ["/srv/app/start_ckan_development.sh"]
-#CMD [ "/bin/bash" ]

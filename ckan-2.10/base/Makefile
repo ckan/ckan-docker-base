@@ -17,7 +17,7 @@ help:
 build:	## Build CKAN 2.x.x images , `make build`
 	echo "Building $(TAG_NAME) and $(ALT_TAG_NAME) and $(PYTHON_TAG_NAME) images"
 	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(TAG_NAME) -t $(ALT_TAG_NAME) .
-#	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(PYTHON_TAG_NAME) -t $(PYTHON_ALT_TAG_NAME) -f $(PYTHON.DOCKERFILE) .
+	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(PYTHON_TAG_NAME) -t $(PYTHON_ALT_TAG_NAME) -f $(PYTHON.DOCKERFILE) .
 
 push: ## Push CKAN 2.x.x images to the DockerHub registry, `make push`
 	echo "Pushing $(TAG_NAME) image"
