@@ -1,14 +1,15 @@
-FROM ckan/ckan-base:2.10.5
+FROM ckan/ckan-base:2.10
 
+# Tag passed through via the Makefile
+ARG CKAN_VERSION=${CKAN_VERSION}
 
 ENV APP_DIR=/srv/app
-ENV SRC_EXTENSIONS_DIR=/srv/app/src_extensions
-
-# Install packages needed by the dev requirements
-RUN apk add --no-cache libffi-dev
+ENV SRC_EXTENSIONS_DIR=${APP_DIR}/src_extensions
 
 # Install CKAN dev requirements
-RUN pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/dev-requirements.txt
+#RUN . ${APP_DIR}/bin/activate && \
+RUN cd ${SRC_DIR}/ckan && \ 
+pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${CKAN_VERSION}/dev-requirements.txt
 
 # Create folder for local extensions sources
 RUN mkdir -p ${SRC_EXTENSIONS_DIR}
