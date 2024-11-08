@@ -12,7 +12,7 @@ USER root
 RUN cd ${SRC_DIR}/ckan && \ 
 pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${CKAN_VERSION}/dev-requirements.txt
 
-COPY --chown=ckan-sys:ckan-sys setup/unsafe.cert setup/unsafe.key setup/start_ckan_development.sh ${APP_DIR}
+COPY --chown=ckan-sys:ckan-sys setup/unsafe.cert setup/unsafe.key setup/start_ckan_development.sh setup/install_src.sh ${APP_DIR}
 
 # Update local directories
 RUN mkdir -p ${SRC_EXTENSIONS_DIR} /var/lib/ckan && \
