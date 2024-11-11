@@ -47,13 +47,6 @@ RUN apt-get install --no-install-recommends -y \
 # Create the src directory
 RUN mkdir -p ${SRC_DIR}
 
-# Install supervisord and create the supervisord.d directory
-RUN apt-get install --no-install-recommends -y \
-        supervisor && \
-        mkdir /etc/supervisord.d
-
-COPY setup/supervisord.conf /etc
-
 # Install uwsgi, the CKAN application, the dependency packages for CKAN plus some confiquration
 RUN pip3 install -U pip && \
     pip3 install uwsgi && \
@@ -83,7 +76,5 @@ RUN chmod 644 ${APP_DIR}/wsgi.py
 ONBUILD RUN mkdir /docker-entrypoint.d
 
 EXPOSE 5000
-
-HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit CMD ["/srv/app/start_ckan.sh"]
 
 CMD ["/srv/app/start_ckan.sh"]
