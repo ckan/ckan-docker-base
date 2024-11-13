@@ -1,8 +1,25 @@
-FROM python:3.9-slim-bookworm
+ARG ENV=base
+
+FROM python:3.9-slim-bookworm AS python
+
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │                                                             │
+# │ Base image (Production env)                                 │
+# │ ---------------------------                                 │
+# │ This is always built                                        │
+# │                                                             │
+# └─────────────────────────────────────────────────────────────┘
+
+
+FROM python AS base
 
 # Tag passed through via the Makefile
-ARG CKAN_VERSION=${CKAN_VERSION}
+ARG CKAN_REF=${CKAN_REF}
+# Make it available to child images
+ENV CKAN_REF=${CKAN_REF}
 
+# Internals, you probably don't need to change these
 ENV TZ=UTC
 ENV APP_DIR=/srv/app
 ENV SRC_DIR=${APP_DIR}/src
@@ -60,7 +77,7 @@ RUN pip3 install "webassets==0.12.1" && \
     pip3 install -U pip && \
     pip3 install uwsgi && \
     cd ${SRC_DIR} && \
-    pip3 install -e git+${GIT_URL}@${CKAN_VERSION}#egg=ckan && \
+    pip3 install -e git+${GIT_URL}@${CKAN_REF}#egg=ckan && \
     cd ckan && \
     cp who.ini ${APP_DIR} && \
     pip3 install "cython<3.0.0" && \
@@ -82,7 +99,7 @@ RUN groupadd -g 92 ckan && \
 
 COPY setup/prerun.py ${APP_DIR}
 COPY setup/start_ckan.sh ${APP_DIR}
-ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_VERSION}/wsgi.py ${APP_DIR}
+ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
 
 # Create entrypoint directory for children image scripts
@@ -93,3 +110,37 @@ EXPOSE 5000
 HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit CMD ["/srv/app/start_ckan.sh"]
 
 CMD ["/srv/app/start_ckan.sh"]
+
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │                                                             │
+# │ Dev image (Development env)                                 │
+# │ ---------------------------                                 │
+# │ This is only built when ENV=dev                             │
+# │                                                             │
+# └─────────────────────────────────────────────────────────────┘
+
+FROM base AS dev
+
+ENV SRC_EXTENSIONS_DIR=${APP_DIR}/src_extensions
+
+# Install CKAN dev requirements
+#RUN . ${APP_DIR}/bin/activate && \
+RUN cd ${SRC_DIR}/ckan && \ 
+pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/dev-requirements.txt
+
+# Create folder for local extensions sources
+RUN mkdir -p ${SRC_EXTENSIONS_DIR}
+
+# These are used to run https on development mode
+COPY setup/unsafe.cert setup/unsafe.key ${APP_DIR}
+
+COPY setup/start_ckan_development.sh ${APP_DIR}
+
+CMD ["/srv/app/start_ckan_development.sh"]
+
+
+# ──────────────────────────────────────────────────────────────
+
+
+FROM ${ENV} AS final

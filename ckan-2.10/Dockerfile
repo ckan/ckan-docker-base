@@ -1,16 +1,33 @@
-FROM alpine:3.17
-ARG CKAN_VERSION=ckan-2.10.5
+ARG ENV=base
+
+FROM alpine:3.17 AS alpine
+
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │                                                             │
+# │ Base image (Production env)                                 │
+# │ ---------------------------                                 │
+# │ This is always built                                        │
+# │                                                             │
+# └─────────────────────────────────────────────────────────────┘
+
+
+FROM alpine AS base
+
+# Tag passed through via the Makefile
+ARG CKAN_REF=${CKAN_REF}
+# Make it available to child images
+ENV CKAN_REF=${CKAN_REF}
 
 # Internals, you probably don't need to change these
 ENV TZ=UTC
 ENV APP_DIR=/srv/app
-ENV SRC_DIR=/srv/app/src
+ENV SRC_DIR=${APP_DIR}/src
 ENV CKAN_INI=${APP_DIR}/ckan.ini
 ENV PIP_SRC=${SRC_DIR}
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
 ENV GIT_URL=https://github.com/ckan/ckan.git
-# CKAN version to build
-ENV GIT_BRANCH=${CKAN_VERSION}
+
 # Customize these on the .env file if needed
 ENV CKAN_SITE_URL=http://localhost:5000
 ENV CKAN__PLUGINS="image_view text_view recline_view datastore envvars"
@@ -72,7 +89,7 @@ RUN apk add --no-cache git \
 COPY setup/supervisord.conf /etc
 
 # Install CKAN
-RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan && \
+RUN pip3 install -e git+${GIT_URL}@${CKAN_REF}#egg=ckan && \
     cd ${SRC_DIR}/ckan && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
@@ -92,7 +109,7 @@ RUN mkdir -p ${CKAN_STORAGE_PATH} && \
 
 COPY setup/prerun.py ${APP_DIR}
 COPY setup/start_ckan.sh ${APP_DIR}
-ADD https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/wsgi.py ${APP_DIR}
+ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
 
 # Create entrypoint directory for children image scripts
@@ -103,3 +120,39 @@ EXPOSE 5000
 HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit CMD ["/srv/app/start_ckan.sh"]
 
 CMD ["/srv/app/start_ckan.sh"]
+
+
+# ┌─────────────────────────────────────────────────────────────┐
+# │                                                             │
+# │ Dev image (Development env)                                 │
+# │ ---------------------------                                 │
+# │ This is only built when ENV=dev                             │
+# │                                                             │
+# └─────────────────────────────────────────────────────────────┘
+
+
+FROM base AS dev
+
+ENV SRC_EXTENSIONS_DIR=/srv/app/src_extensions
+
+# Install packages needed by the dev requirements
+RUN apk add --no-cache libffi-dev
+
+# Install CKAN dev requirements
+RUN pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/dev-requirements.txt
+
+# Create folder for local extensions sources
+RUN mkdir -p ${SRC_EXTENSIONS_DIR}
+
+# These are used to run https on development mode
+COPY setup/unsafe.cert setup/unsafe.key ${APP_DIR}
+
+COPY setup/start_ckan_development.sh ${APP_DIR}
+
+CMD ["/srv/app/start_ckan_development.sh"]
+
+
+# ──────────────────────────────────────────────────────────────
+
+
+FROM ${ENV} AS final
