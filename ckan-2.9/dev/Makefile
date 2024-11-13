@@ -15,9 +15,9 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 build:	## Build a CKAN 2.x-dev image , `make build`
-	echo "Building $(TAG_NAME) and $(ALT_TAG_NAME) images"
+	echo "Building $(TAG_NAME), $(ALT_TAG_NAME), $(PYTHON_TAG_NAME) and $(PYTHON_ALT_TAG_NAME) images"
 	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(TAG_NAME) -t $(ALT_TAG_NAME) .
-	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(PYTHON_TAG_NAME) -t $(PYTHON_ALT_TAG_NAME) -f $(PYTHON.DOCKERFILE) --no-cache .
+	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" -t $(PYTHON_TAG_NAME) -t $(PYTHON_ALT_TAG_NAME) -f $(PYTHON.DOCKERFILE) .
 
 push: ## Push a CKAN 2.x-dev image to the DockerHub registry, `make push`
 	echo "Pushing $(TAG_NAME) image"
