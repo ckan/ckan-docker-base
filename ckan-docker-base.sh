@@ -91,8 +91,7 @@ show_usage() {
     echo "  versions                   - Shows the current CKAN versions used"
     echo "  build <version> [base|dev] - Builds images for a CKAN version"
     echo "                               Pass 'base' or 'dev' to just build these."
-    echo "  push  <version> [base|dev] - Pushes images to the Docker Hub"
-    echo "                               Pass 'base' or 'dev' to just push these."
+    echo "  push  <version>            - Pushes images to the Docker Hub"
     exit 1
 }
 
