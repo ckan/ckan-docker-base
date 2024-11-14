@@ -76,12 +76,7 @@ push_images() {
 
 show_versions() {
     echo "Versions built currently:"
-    for dir in ckan-*/; do
-        dir=${dir%/}
-        if [ -f "${dir}/VERSION.txt" ]; then
-            echo "* $(cat "${dir}"/VERSION.txt)"
-        fi
-    done
+    cat ckan-*/VERSION.txt | sort -t. -k1,1n -k2,2n | sed 's/^/* /'
 }
 
 
