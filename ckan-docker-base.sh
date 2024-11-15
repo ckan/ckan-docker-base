@@ -9,7 +9,7 @@ set_vars() {
 
     ckan_version=$(cat "ckan-$ckan_version_ref/VERSION.txt")
     python_version=$(cat "ckan-$ckan_version_ref/PYTHON_VERSION.txt")
-    python_dockerfile=dockerfile.py$python_version
+    python_dockerfile=Dockerfile.py$python_version
     tag_name="ckan/ckan-$env:$ckan_version"
     python_tag_name="ckan/ckan-$env:$ckan_version-py$python_version"
     if [ "$ckan_version" = "master" ]; then
@@ -40,7 +40,7 @@ build_images() {
             --build-arg="CKAN_REF=$ckan_tag" \
             -t "$python_tag_name" \
             -t "$python_alt_tag_name" \
-            -f "$python_dockerfile" \
+            -f "ckan-$ckan_version_ref/$python_dockerfile" \
             "ckan-$ckan_version_ref"
     fi
 
