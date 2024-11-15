@@ -1,0 +1,106 @@
+name: Reusable CKAN images build and test workflow
+
+on:
+  workflow_call:
+    inputs:
+      ckan-major-version:
+        required: true
+        type: string
+      docker-file:
+        required: false
+        default: 'Dockerfile'
+        type: string
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    services:
+      solr:
+        image: ckan/ckan-solr:${{ inputs.ckan-major-version }}-solr9
+        ports:
+          - 8983:8983
+      postgres:
+        image: ckan/ckan-postgres-dev:${{ inputs.ckan-major-version }}
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+          image: redis:7
+          ports:
+            - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Read version from VERSION file
+        run: |
+          VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/VERSION.txt")
+          if [[ $VERSION_VALUE != "master" ]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
+          echo "Using ref $VERSION_VALUE in next steps"
+          echo "CKAN_REF=$VERSION_VALUE" >> $GITHUB_ENV
+
+      - name: Build base image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          load: true
+          context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
+          file: ${{ inputs.docker-file }}
+          build-args: |
+            CKAN_REF=${{ env.CKAN_REF }}
+            ENV=base
+          tags: |
+            ckan-base-${{ inputs.ckan-major-version }}-local
+
+      - name: Test base image
+        run: |
+          docker run \
+            --rm \
+            --net=host \
+            -e CKAN_SQLALCHEMY_URL=postgresql://ckan_default:pass@localhost/ckan_test \
+            -e CKAN_DATASTORE_WRITE_URL=postgresql://datastore_write:pass@localhost/datastore_test \
+            -e CKAN_DATASTORE_READ_URL=postgresql://datastore_read:pass@localhost/datastore_test \
+            -e CKAN_SOLR_URL=http://localhost:8983/solr/ckan \
+            -e CKAN_REDIS_URL=redis://localhost:6379/1 \
+            -e CKAN_INI=/srv/app/src/ckan/test-core.ini \
+            --entrypoint "" \
+            ckan-base-${{ inputs.ckan-major-version }}-local \
+            ckan --help
+
+      - name: Build dev image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          load: true
+          context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
+          file: ${{ inputs.docker-file }}
+          build-args: |
+            CKAN_REF=${{ env.CKAN_REF }}
+            ENV=dev
+          tags: |
+            ckan-dev-${{ inputs.ckan-major-version }}-local
+
+      - name: Test dev image
+        run: |
+          docker run \
+            --rm \
+            --net=host \
+            -e CKAN_SQLALCHEMY_URL=postgresql://ckan_default:pass@localhost/ckan_test \
+            -e CKAN_DATASTORE_WRITE_URL=postgresql://datastore_write:pass@localhost/datastore_test \
+            -e CKAN_DATASTORE_READ_URL=postgresql://datastore_read:pass@localhost/datastore_test \
+            -e CKAN_SOLR_URL=http://localhost:8983/solr/ckan \
+            -e CKAN_REDIS_URL=redis://localhost:6379/1 \
+            -e CKAN_INI=/srv/app/src/ckan/test-core.ini \
+            --entrypoint "" \
+            ckan-dev-${{ inputs.ckan-major-version }}-local \
+            pytest --ckan-ini=/srv/app/src/ckan/test-core.ini -v /srv/app/src/ckan/ckan/tests/logic/action/test_create.py::TestDatasetCreate
