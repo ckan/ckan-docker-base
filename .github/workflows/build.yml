@@ -20,8 +20,6 @@ jobs:
         with:
           push: false
           load: true
-          tags: ${{ env.TEST_TAG }}
-        with:
           context: ckan-2.10
           file: Dockerfile.py3.10
           build-args: |
