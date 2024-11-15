@@ -1,4 +1,5 @@
 import os
+import pwd
 import sys
 import subprocess
 import psycopg2
@@ -200,9 +201,16 @@ def create_sysadmin():
         # We're running as root before pivoting to uwsgi and dropping privs
         data_dir = "%s/storage" % os.environ['CKAN_STORAGE_PATH']
 
-        command = ["chown", "-R", "ckan:ckan", data_dir]
+        try:
+            user_name = "ckan-sys"
+            pwd.getpwnam(user_name)
+            command = ["chown", "-R", "ckan:ckan-sys", data_dir]
+        except KeyError:
+            user_name = "ckan"
+            command = ["chown", "-R", "ckan:ckan", data_dir]
         subprocess.call(command)
-        print("[prerun] Ensured storage directory is owned by ckan")
+
+        print("[prerun] Ensured storage directory is owned by {}".format(user_name))
 
 if __name__ == "__main__":
 
