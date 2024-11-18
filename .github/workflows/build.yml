@@ -9,10 +9,12 @@ jobs:
     services:
       solr:
         image: ckan/ckan-solr:2.10-solr9
-        ports: 8983:8983
+        ports: 
+          - 8983:8983
       postgres:
         image: ckan/ckan-postgres-dev:2.10
-        ports: 5432:5432
+        ports: 
+          - 5432:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -20,7 +22,8 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
       redis:
           image: redis:7
-          ports: 6379:6379
+          ports: 
+            - 6379:6379
 
     steps:
       - name: Set up QEMU
