@@ -6,7 +6,7 @@ on:
       ckan-major-version:
         required: true
         type: string
-     docker-file:
+      docker-file:
         required: false
         default: 'Dockerfile'
         type: string
