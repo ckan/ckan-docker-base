@@ -83,11 +83,6 @@ RUN groupadd -g 502 ckan-sys && \
     useradd -rm -d /srv/app -s /bin/bash -g ckan-sys -u 502 ckan-sys && \
     useradd -rm -d /srv/app -s /bin/bash -g ckan-sys -u 503 ckan
 
-# Set the ownership of the app directory, usr/local and the entrypoint directory to the ckan-sys user
-RUN chown -R ckan-sys:ckan-sys ${APP_DIR} && \
-    chown -R ckan-sys:ckan-sys /docker-entrypoint.d && \
-    chown -R ckan-sys:ckan-sys /usr/local
-
 COPY setup/prerun.py ${APP_DIR}
 COPY setup/start_ckan.sh ${APP_DIR}
 ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/wsgi.py ${APP_DIR}
