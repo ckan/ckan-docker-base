@@ -7,6 +7,4 @@ jobs:
     uses: ./.github/workflows/reusable-build-and-test.yml
     with:
       ckan-major-version: "2.10"
-      base-tag: "ckan/ckan-base:2.10"
-      dev-tag: "ckan/ckan-dev:2.10"
       docker-file: "Dockerfile.py3.10"

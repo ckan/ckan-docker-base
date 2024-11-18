@@ -6,16 +6,10 @@ on:
       ckan-major-version:
         required: true
         type: string
-      base-tag:
-        required: true
-        type: string
-      dev-tag:
-        required: true
-        type: string
-      docker-file:
+     docker-file:
         required: false
         default: 'Dockerfile'
-        type: string  
+        type: string
 
 jobs:
   build_and_test:
@@ -66,7 +60,7 @@ jobs:
             CKAN_REF=${{ env.CKAN_REF }}
             ENV=base
           tags: |
-            ${{ inputs.base-tag }}
+            ckan-base-${{ inputs.ckan-major-version }}-local
 
       - name: Test base image
         run: |
@@ -80,7 +74,7 @@ jobs:
             -e CKAN_REDIS_URL=redis://localhost:6379/1 \
             -e CKAN_INI=/srv/app/src/ckan/test-core.ini \
             --entrypoint "" \
-            ${{ inputs.base-tag }} \
+            ckan-base-${{ inputs.ckan-major-version }}-local \
             ckan --help
 
       - name: Build dev image
@@ -94,7 +88,7 @@ jobs:
             CKAN_REF=${{ env.CKAN_REF }}
             ENV=dev
           tags: |
-            ${{ inputs.dev-tag }} 
+            ckan-dev-${{ inputs.ckan-major-version }}-local
 
       - name: Test dev image
         run: |
@@ -108,5 +102,5 @@ jobs:
             -e CKAN_REDIS_URL=redis://localhost:6379/1 \
             -e CKAN_INI=/srv/app/src/ckan/test-core.ini \
             --entrypoint "" \
-            ${{ inputs.dev-tag }} \ 
+            ckan-dev-${{ inputs.ckan-major-version }}-local \
             pytest --ckan-ini=/srv/app/src/ckan/test-core.ini -v /srv/app/src/ckan/ckan/tests/logic/action/test_create.py::TestDatasetCreate
