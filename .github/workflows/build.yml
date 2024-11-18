@@ -32,7 +32,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and export to Docker
+      - name: Build base image
         uses: docker/build-push-action@v6
         with:
           push: false
@@ -45,7 +45,7 @@ jobs:
           tags: |
             ckan/ckan-base:2.10-py3.10
 
-      - name: Test
+      - name: Test base image
         run: |
           docker run \
             --rm \
@@ -59,3 +59,31 @@ jobs:
             --entrypoint "" \
             ckan/ckan-base:2.10-py3.10 \
             ckan --help
+
+      - name: Build dev image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          load: true
+          context: "{{defaultContext}}:ckan-2.10"
+          file: Dockerfile.py3.10
+          build-args: |
+            CKAN_REF=ckan-2.10.5
+            ENV=dev
+          tags: |
+            ckan/ckan-dev:2.10-py3.10
+
+      - name: Test dev image
+        run: |
+          docker run \
+            --rm \
+            --net=host \
+            -e CKAN_SQLALCHEMY_URL=postgresql://ckan_default:pass@localhost/ckan_test \
+            -e CKAN_DATASTORE_WRITE_URL=postgresql://datastore_write:pass@localhost/datastore_test \
+            -e CKAN_DATASTORE_READ_URL=postgresql://datastore_read:pass@localhost/datastore_test \
+            -e CKAN_SOLR_URL=http://localhost:8983/solr/ckan \
+            -e CKAN_REDIS_URL=redis://localhost:6379/1 \
+            -e CKAN_INI=/srv/app/src/ckan/test-core.ini \
+            --entrypoint "" \
+            ckan/ckan-dev:2.10-py3.10 \
+            pytest --ckan-ini=/srv/app/src/ckan/test-core.ini -v /srv/app/src/ckan/ckan/tests/logic/action/test_create.py::TestDatasetCreate
