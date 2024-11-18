@@ -53,7 +53,7 @@ jobs:
           VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/VERSION.txt")
           if [[ $VERSION_VALUE != "master" ]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
           echo "Using ref $VERSION_VALUE in next steps"
-          echo "CKAN_VERSION=VERSION_VALUE" >> $GITHUB_ENV
+          echo "CKAN_VERSION=$VERSION_VALUE" >> $GITHUB_ENV
 
       - name: Build base image
         uses: docker/build-push-action@v6
