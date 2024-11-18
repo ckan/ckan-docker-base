@@ -9,4 +9,4 @@ jobs:
       ckan-major-version: "2.9"
       base-tag: "ckan/ckan-base:2.9"
       dev-tag: "ckan/ckan-dev:2.9"
-      docker-file: "Dockerfile.py3.10"
+      docker-file: "Dockerfile.py3.9"
