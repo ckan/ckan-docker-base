@@ -9,8 +9,10 @@ jobs:
     services:
       solr:
         image: ckan/ckan-solr:2.10-solr9
+        ports: 8983:8983
       postgres:
         image: ckan/ckan-postgres-dev:2.10
+        ports: 5432:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -18,6 +20,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
       redis:
           image: redis:7
+          ports: 6379:6379
 
     steps:
       - name: Set up QEMU
@@ -38,13 +41,11 @@ jobs:
             ENV=base
           tags: |
             ckan/ckan-base:2.10-py3.10
-            ckan/ckan-base:2.10.5-py3.10
       
       - name: Test
         run: |
           docker run \
             --rm \
-            --net=host \
             -e CKAN_SQLALCHEMY_URL=postgresql://ckan_default:pass@localhost/ckan_test \
             -e CKAN_DATASTORE_WRITE_URL=postgresql://datastore_write:pass@localhost/datastore_test \
             -e CKAN_DATASTORE_READ_URL=postgresql://datastore_read:pass@localhost/datastore_test \
