@@ -48,7 +48,7 @@ jobs:
 
       - name: Read version from VERSION file
         run: |
-          VERSION_VALUE=$(cat {{ defaultContext }}/ckan-${{ inputs.ckan-major-version }}/VERSION.txt)
+          VERSION_VALUE=$(cat "{{ defaultContext }}/ckan-${{ inputs.ckan-major-version }}/VERSION.txt")
           echo "CKAN_VERSION=VERSION_VALUE" >> $GITHUB_ENV
 
       - name: Build base image
