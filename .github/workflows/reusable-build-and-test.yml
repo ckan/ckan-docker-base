@@ -1,6 +1,21 @@
-name: build
+name: Reusable CKAN images build and test workflow
 
 on:
+  workflow_call:
+    inputs:
+      ckan-major-version:
+        required: true
+        type: string
+      base-tag:
+        required: true
+        type: string
+      dev-tag:
+        required: true
+        type: string
+      docker-file:
+        required: false
+        default: 'Dockerfile'
+        type: string  
   push:
 
 jobs:
@@ -8,11 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     services:
       solr:
-        image: ckan/ckan-solr:2.10-solr9
+        image: ckan/ckan-solr:${{ inputs.ckan-major-version }}-solr9
         ports:
           - 8983:8983
       postgres:
-        image: ckan/ckan-postgres-dev:2.10
+        image: ckan/ckan-postgres-dev:${{ inputs.ckan-major-version }}
         ports:
           - 5432:5432
         env:
@@ -32,18 +47,22 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Read version from VERSION file
+        run: |
+          echo "CKAN_VERSION=$(cat ckan-${{ inputs.ckan-major-version }}/VERSION.txt)" >> $GITHUB_ENV
+
       - name: Build base image
         uses: docker/build-push-action@v6
         with:
           push: false
           load: true
-          context: "{{defaultContext}}:ckan-2.10"
-          file: Dockerfile.py3.10
+          context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
+          file: ${{ inputs.docker-file }}
           build-args: |
-            CKAN_REF=ckan-2.10.5
+            CKAN_REF=ckan-${{ env.CKAN_VERSION }}
             ENV=base
           tags: |
-            ckan/ckan-base:2.10-py3.10
+			${{ inputs.base-tag }}
 
       - name: Test base image
         run: |
@@ -57,7 +76,7 @@ jobs:
             -e CKAN_REDIS_URL=redis://localhost:6379/1 \
             -e CKAN_INI=/srv/app/src/ckan/test-core.ini \
             --entrypoint "" \
-            ckan/ckan-base:2.10-py3.10 \
+			${{ inputs.base-tag }} \
             ckan --help
 
       - name: Build dev image
@@ -65,13 +84,13 @@ jobs:
         with:
           push: false
           load: true
-          context: "{{defaultContext}}:ckan-2.10"
-          file: Dockerfile.py3.10
+          context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
+          file: ${{ inputs.docker-file }}
           build-args: |
-            CKAN_REF=ckan-2.10.5
+            CKAN_REF=ckan-${{ env.CKAN_VERSION }}
             ENV=dev
           tags: |
-            ckan/ckan-dev:2.10-py3.10
+			${{ inputs.dev-tag }} 
 
       - name: Test dev image
         run: |
@@ -85,5 +104,5 @@ jobs:
             -e CKAN_REDIS_URL=redis://localhost:6379/1 \
             -e CKAN_INI=/srv/app/src/ckan/test-core.ini \
             --entrypoint "" \
-            ckan/ckan-dev:2.10-py3.10 \
+			${{ inputs.dev-tag }} \ 
             pytest --ckan-ini=/srv/app/src/ckan/test-core.ini -v /srv/app/src/ckan/ckan/tests/logic/action/test_create.py::TestDatasetCreate
