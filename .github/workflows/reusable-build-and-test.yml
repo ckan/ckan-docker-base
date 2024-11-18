@@ -40,6 +40,8 @@ jobs:
             - 6379:6379
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -48,7 +50,9 @@ jobs:
 
       - name: Read version from VERSION file
         run: |
-          VERSION_VALUE=$(cat "{{ defaultContext }}/ckan-${{ inputs.ckan-major-version }}/VERSION.txt")
+          VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/VERSION.txt")
+          if [[ $VERSION_VALUE != "master" ]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
+          echo "Using ref $VERSION_VALUE in next steps"
           echo "CKAN_VERSION=VERSION_VALUE" >> $GITHUB_ENV
 
       - name: Build base image
