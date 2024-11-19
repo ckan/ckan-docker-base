@@ -152,7 +152,7 @@ RUN apk add --no-cache libffi-dev
 RUN pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/dev-requirements.txt
 
 # TODO: remove if requirements upgraded upstream
-RUN pip3 install -U pytest-rerunfailures 
+RUN pip3 install -U pytest-rerunfailures
 
 # Create folder for local extensions sources
 RUN mkdir -p ${SRC_EXTENSIONS_DIR}
