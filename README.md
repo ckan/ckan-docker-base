@@ -48,10 +48,10 @@ ckan-X.XX
 The images can be built locally and tagged appropriately so they can then be pushed into the CKAN DockerHub repo
 assuming you have the correct permission to do so.
 
-All operations are done using the `ckan-docker-base.sh` script located at the root of the repository.
+All operations are done using the `build.sh` script located at the root of the repository.
 
 ```
-Usage: ./ckan-docker-base.sh <action> [<params>]
+Usage: ./build.sh <action> [<params>]
 Available actions:
   versions                   - Shows the current CKAN versions used
   build <version> [base|dev] - Builds images for a CKAN version
@@ -63,11 +63,11 @@ Available actions:
 For instance:
 
 ```
-./ckan-docker-base.sh build 2.11
+./build.sh build 2.11
 
-./ckan-docker-base.sh build master
-./ckan-docker-base.sh build 2.10 base
-./ckan-docker-base.sh build 2.9 dev
+./build.sh build master
+./build.sh build 2.10 base
+./build.sh build 2.9 dev
 ```
 
 
