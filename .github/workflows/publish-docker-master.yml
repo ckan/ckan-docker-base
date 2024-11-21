@@ -8,7 +8,6 @@ jobs:
     uses: ./.github/workflows/reusable-docker-publish.yml
     with:
       ckan-major-version: "master"
-      ckan-version: "master"
       base-tags: "ckan/ckan-base:master,ckan/ckan-base:master-py3.10"
       dev-tags: "ckan/ckan-dev:master,ckan/ckan-dev:master-py3.10"
     secrets:

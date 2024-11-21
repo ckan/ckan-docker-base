@@ -1,12 +1,9 @@
-name: Reusable CKAN Docker images build and push
+name: Reusable CKAN images build and push workflow
 
 on:
   workflow_call:
     inputs:
       ckan-major-version:
-        required: true
-        type: string
-      ckan-version:
         required: true
         type: string
       base-tags:
@@ -31,29 +28,41 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Read version from VERSION file
+        run: |
+          VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/VERSION.txt")
+          if [[ $VERSION_VALUE != "master" ]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
+          echo "Using ref $VERSION_VALUE in next steps"
+          echo "CKAN_REF=$VERSION_VALUE" >> $GITHUB_ENV
+
       - name: Build ${{ inputs.ckan-major-version }} base
         uses: docker/build-push-action@v6
         with:
-          context: ckan-${{ inputs.ckan-major-version }}/base
-          file: ckan-${{ inputs.ckan-major-version }}/base/${{ inputs.docker-file }}
-          push: true
+          push: false
+          context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
+          file: ${{ inputs.docker-file }}
           build-args: |
-            CKAN_VERSION=${{ inputs.ckan-version }}
+            CKAN_REF=${{ env.CKAN_REF }}
+            ENV=base
           tags: ${{ inputs.base-tags }}
 
       - name: Build ${{ inputs.ckan-major-version }} dev
         uses: docker/build-push-action@v6
         with:
-          context: ckan-${{ inputs.ckan-major-version }}/dev
-          file: ckan-${{ inputs.ckan-major-version }}/dev/${{ inputs.docker-file }}
-          push: true
+          push: false
+          context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
+          file: ${{ inputs.docker-file }}
           build-args: |
-            CKAN_VERSION=${{ inputs.ckan-version }}
+            CKAN_REF=${{ env.CKAN_REF }}
+            ENV=dev
           tags: ${{ inputs.dev-tags }}

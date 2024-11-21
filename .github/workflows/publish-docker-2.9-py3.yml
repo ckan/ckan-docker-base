@@ -7,7 +7,6 @@ jobs:
     uses: ./.github/workflows/reusable-docker-publish.yml
     with:
       ckan-major-version: "2.9"
-      ckan-version: "ckan-2.9.11"
       docker-file: "Dockerfile.py3.9"
       base-tags: "ckan/ckan-base:2.9-py3.9,ckan/ckan-base:2.9.11-py3.9"
       dev-tags: "ckan/ckan-dev:2.9-py3.9,ckan/ckan-dev:2.9.11-py3.9"
