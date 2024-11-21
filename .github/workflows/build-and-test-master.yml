@@ -1,0 +1,9 @@
+name: Build and test CKAN master images
+
+on: push
+
+jobs:
+  call-reusable-workflow:
+    uses: ./.github/workflows/reusable-build-and-test.yml
+    with:
+      ckan-major-version: "master"

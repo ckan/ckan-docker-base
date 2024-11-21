@@ -1,0 +1,10 @@
+name: Build and test CKAN 2.10 images (python)
+
+on: push
+
+jobs:
+  call-reusable-workflow:
+    uses: ./.github/workflows/reusable-build-and-test.yml
+    with:
+      ckan-major-version: "2.10"
+      docker-file: "Dockerfile.py3.10"
