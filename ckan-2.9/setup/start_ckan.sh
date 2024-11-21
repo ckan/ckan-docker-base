@@ -23,7 +23,6 @@ then
             *.py)     echo "$0: Running init file $f"; python3 "$f"; echo ;;
             *)        echo "$0: Ignoring $f (not an sh or py file)" ;;
         esac
-        echo
     done
 fi
 
@@ -32,7 +31,6 @@ UWSGI_OPTS="--plugins http,python \
             --socket /tmp/uwsgi.sock \
             --wsgi-file /srv/app/wsgi.py \
             --module wsgi:application \
-            --uid 92 --gid 92 \
             --http 0.0.0.0:5000 \
             --master --enable-threads \
             --lazy-apps \
