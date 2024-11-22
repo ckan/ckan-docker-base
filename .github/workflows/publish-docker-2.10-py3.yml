@@ -8,8 +8,6 @@ jobs:
     with:
       ckan-major-version: "2.10"
       docker-file: "Dockerfile.py3.10"
-      base-tags: "ckan/ckan-base:2.10-py3.10,ckan/ckan-base:2.10.5-py3.10"
-      dev-tags: "ckan/ckan-dev:2.10-py3.10,ckan/ckan-dev:2.10.5-py3.10"
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
