@@ -1,6 +1,8 @@
 name: Build and push CKAN 2.9 images (alpine)
 
-on: push
+on:
+  release:
+    types: [released]
 
 jobs:
   call-reusable-workflow:

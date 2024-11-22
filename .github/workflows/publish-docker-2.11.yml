@@ -1,6 +1,8 @@
 name: Build and push CKAN 2.11 images
 
-on: push
+on:
+  release:
+    types: [released]
 
 jobs:
   call-reusable-workflow:

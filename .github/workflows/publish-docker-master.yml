@@ -1,4 +1,4 @@
-name: Build and publish the master docker-ckan image
+name: Build and push the master images
 
 on:
   schedule:

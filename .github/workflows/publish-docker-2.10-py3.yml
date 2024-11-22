@@ -1,6 +1,8 @@
 name: Build and push CKAN 2.10 images (python)
 
-on: push
+on:
+  release:
+    types: [released]
 
 jobs:
   call-reusable-workflow:
