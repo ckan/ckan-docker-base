@@ -95,7 +95,7 @@ jobs:
       - name: Build ${{ inputs.ckan-major-version }} base
         uses: docker/build-push-action@v6
         with:
-          push: false
+          push: true
           context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
           file: ${{ inputs.docker-file }}
           build-args: |
@@ -106,7 +106,7 @@ jobs:
       - name: Build ${{ inputs.ckan-major-version }} dev
         uses: docker/build-push-action@v6
         with:
-          push: false
+          push: true
           context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
           file: ${{ inputs.docker-file }}
           build-args: |
