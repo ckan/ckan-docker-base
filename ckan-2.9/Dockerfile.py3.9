@@ -69,7 +69,7 @@ RUN apt-get install --no-install-recommends -y \
         supervisor && \
         mkdir /etc/supervisord.d
 
-COPY setup/supervisord.conf /etc
+COPY setup/supervisord.py3.conf /etc/supervisord.conf
 
 # Install uwsgi, the CKAN application, the dependency packages for CKAN plus some confiquration
 
