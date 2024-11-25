@@ -8,18 +8,22 @@ The following CKAN versions are available in base or dev forms. They are disting
 
 | CKAN Version | Type |  Base image | Docker tag | Notes |
 | --- | --- | --- | --- | --- |
-| 2.9.x  | base image | `alpine:3.15`               | `ckan/ckan-base:2.9.11`, `ckan/ckan-base:2.9`                |  |
-| 2.9.x  | dev image  | `alpine:3.15`               | `ckan/ckan-dev:2.9.11`, `ckan/ckan-dev:2.9`                  |  |
-| 2.9.x  | base image | `python:3.9-slim-bookworm`  | `ckan/ckan-base:2.9-py3.9`, `ckan/ckan-base:2.9.11-py3.9`    |  |
-| 2.9.x  | dev image  | `python:3.9-slim-bookworm`  | `ckan/ckan-dev:2.9-py3.9`, `ckan/ckan-dev:2.9.11-py3.9`      |  |
-| 2.10.x | base image | `alpine:3.17`               | `ckan/ckan-base:2.10.5`, `ckan/ckan-base:2.10`               |  |
-| 2.10.x | dev image  | `alpine:3.17`               | `ckan/ckan-dev:2.10.5`, `ckan/ckan-dev:2.10`                 |  |
+| **2.11.x** | **base image** | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.11`, `ckan/ckan-base:2.11.0`, `ckan/ckan-base:2.11-py3.10`, `ckan/ckan-base:2.11.0-py3.10`          |  |
+| **2.11.x** | **dev image**  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.11`, `ckan/ckan-dev:2.11.0`, `ckan/ckan-dev:2.11-py3.10`, `ckan/ckan-dev:2.11.0-py3.10`            |  |
 | 2.10.x | base image | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.10-py3.10`, `ckan/ckan-base:2.10.5-py3.10` |  |
 | 2.10.x | dev image  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.10-py3.10`, `ckan/ckan-dev:2.10.5-py3.10`   |  |
-| 2.11.x | base image | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.11`, `ckan/ckan-base:2.11.0`, `ckan/ckan-base:2.11-py3.10`, `ckan/ckan-base:2.11.0-py3.10`          |  |
-| 2.11.x | dev image  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.11`, `ckan/ckan-dev:2.11.0`, `ckan/ckan-dev:2.11-py3.10`, `ckan/ckan-dev:2.11.0-py3.10`            |  |
+| 2.10.x | base image | `alpine:3.17`               | `ckan/ckan-base:2.10.5`, `ckan/ckan-base:2.10`               | :warning: Deprecated. Please use a Python/Debian based image |
+| 2.10.x | dev image  | `alpine:3.17`               | `ckan/ckan-dev:2.10.5`, `ckan/ckan-dev:2.10`                 | :warning: Deprecated. Please use a Python/Debian based image |
+| 2.9.x  | base image | `python:3.9-slim-bookworm`  | `ckan/ckan-base:2.9-py3.9`, `ckan/ckan-base:2.9.11-py3.9`    |  |
+| 2.9.x  | dev image  | `python:3.9-slim-bookworm`  | `ckan/ckan-dev:2.9-py3.9`, `ckan/ckan-dev:2.9.11-py3.9`      |  |
+| 2.9.x  | base image | `alpine:3.15`               | `ckan/ckan-base:2.9.11`, `ckan/ckan-base:2.9`                | :warning: Deprecated. Please use a Python/Debian based image |
+| 2.9.x  | dev image  | `alpine:3.15`               | `ckan/ckan-dev:2.9.11`, `ckan/ckan-dev:2.9`                  | :warning: Deprecated. Please use a Python/Debian based image |
 | master | base image | `python:3.10-slim-bookworm` | `ckan/ckan-base:master`, `ckan/ckan-base:master-py3.10`      | Built daily, do not use in production |
 | master | dev image  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:master`, `ckan/ckan-dev:master-py3.10`        | Built daily, do not use in production |
+
+In addition to the Docker tags listed above, there are additional ones published for each of these images [releases](https://github.com/ckan/ckan-docker-base/releases), in the form:
+
+  ckan/ckan-base:{major_version}-py{python_version}-{release_name}
 
 
 Older CKAN versions might be available as [image tags](https://hub.docker.com/r/ckan/ckan-base/tags) but note that these are not supported as per [CKAN's release policy](https://docs.ckan.org/en/latest/maintaining/releases.html#supported-versions).
