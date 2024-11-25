@@ -1,14 +1,14 @@
-name: Build and push the master images
+name: Build and push CKAN 2.9 images (alpine)
 
 on:
-  schedule:
-    - cron: "15 5 * * *"
+  release:
+    types: [released]
 
 jobs:
   call-reusable-workflow:
     uses: ./.github/workflows/reusable-docker-publish.yml
     with:
-      ckan-major-version: "master"
+      ckan-major-version: "2.9"
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

@@ -43,10 +43,26 @@ ckan-X.XX
 
 ```
 
-### Building and Pushing the images
+### Release
 
-The images can be built locally and tagged appropriately so they can then be pushed into the CKAN DockerHub repo
-assuming you have the correct permission to do so.
+Images are built and pushed to the Docker Hub after a new [release](https://github.com/ckan/ckan-docker-base/releases)
+is published.
+All non-trivial changes to this repo (certainly those which affect the images) should be
+done via a Pull Request. This will trigger automated tests that check that the image
+builds fine and perform some basic tests, but more thorough local testing might be necessary.
+
+Once the maintainers decide it's time to do a new release, changes should be documented as
+part of the release notes. Publishing the new release will trigger the actions that push
+the images to Docker Hub.
+
+
+### Building the images locally
+
+The images can be built locally for development and debugging purposes
+
+> [!WARNING]
+> Do not push images directly to the Docker Hub locally. Use the proper release process described
+> above.
 
 All operations are done using the `build.sh` script located at the root of the repository.
 
