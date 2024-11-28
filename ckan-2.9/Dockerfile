@@ -86,7 +86,7 @@ RUN apk add --no-cache git \
     curl -o ${SRC_DIR}/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
     python3 ${SRC_DIR}/get-pip.py && \
     pip3 install supervisor && \
-    mkdir /etc/supervisord.d && \
+    mkdir -p /etc/supervisord.d && \
     #pip wheel --wheel-dir=/wheels uwsgi gevent && \
     rm -rf ${SRC_DIR}/get-pip.py
 
@@ -123,7 +123,7 @@ ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
 
 # Create entrypoint directory for children image scripts
-ONBUILD RUN mkdir /docker-entrypoint.d
+ONBUILD RUN mkdir -p /docker-entrypoint.d
 
 EXPOSE 5000
 
