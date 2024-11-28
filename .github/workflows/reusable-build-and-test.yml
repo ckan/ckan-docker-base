@@ -77,6 +77,11 @@ jobs:
             ckan-base-${{ inputs.ckan-major-version }}-local \
             ckan --help
 
+      - name: Test child images can be built
+        run: |
+          echo "FROM ckan-base-${{ inputs.ckan-major-version }}-local" > Dockerfile.child
+          docker build -f Dockerfile.child .
+
       - name: Build dev image
         uses: docker/build-push-action@v6
         with:
