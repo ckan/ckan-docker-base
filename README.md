@@ -1,6 +1,8 @@
 # Pre-configured CKAN Docker images
 
-This is the Git repo of the official Docker images for [CKAN](https://github.com/ckan/ckan/).
+This is the Git repo of the official [Docker images](https://github.com/ckan/ckan-docker-base) for [CKAN](https://github.com/ckan/ckan/).
+
+Please raise issues or code contributions at [github:ckan/ckan-docker-base](https://github.com/ckan/ckan-docker-base)
 
 The images will usually be used as a Docker Compose install in conjunction with other Docker images that make up the CKAN platform. The official CKAN Docker install is located here: [ckan-docker](https://github.com/ckan/ckan-docker)
 
