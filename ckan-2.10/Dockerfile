@@ -113,7 +113,7 @@ ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
 
 # Create entrypoint directory for children image scripts
-ONBUILD RUN mkdir -p /docker-entrypoint.d
+RUN mkdir -p /docker-entrypoint.d
 
 EXPOSE 5000
 
