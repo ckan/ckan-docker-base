@@ -67,7 +67,7 @@ RUN mkdir -p ${SRC_DIR}
 # Install supervisord and create the supervisord.d directory
 RUN apt-get install --no-install-recommends -y \
         supervisor && \
-        mkdir /etc/supervisord.d
+        mkdir -p /etc/supervisord.d
 
 COPY setup/supervisord.py3.conf /etc/supervisord.conf
 

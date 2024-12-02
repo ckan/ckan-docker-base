@@ -1,6 +1,6 @@
 ARG ENV=base
 
-FROM alpine:3.17 AS alpine
+FROM alpine:3.15 AS alpine
 
 
 # ┌─────────────────────────────────────────────────────────────┐
@@ -50,6 +50,7 @@ RUN apk add --no-cache git \
         gettext \
         postgresql-client \
         python3 \
+        py3-pip \
         libxml2 \
         libxslt \
         musl-dev \
@@ -57,10 +58,11 @@ RUN apk add --no-cache git \
         uwsgi-http \
         uwsgi-corerouter \
         uwsgi-python \
+        py3-gevent \
+        uwsgi-gevent \
         libmagic \
         curl \
-        patch \
-        bash && \
+        patch && \
     # Packages to build CKAN requirements and plugins
     apk add --no-cache --virtual .build-deps \
         postgresql-dev \
@@ -80,10 +82,12 @@ RUN apk add --no-cache git \
     # Create SRC_DIR
     mkdir -p ${SRC_DIR} && \
     # Install pip, supervisord and uwsgi
+    pip3 install "webassets==0.12.1" && \
     curl -o ${SRC_DIR}/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
     python3 ${SRC_DIR}/get-pip.py && \
     pip3 install supervisor && \
-    mkdir -p /etc/supervisord.d && \
+    mkdir /etc/supervisord.d && \
+    #pip wheel --wheel-dir=/wheels uwsgi gevent && \
     rm -rf ${SRC_DIR}/get-pip.py
 
 COPY setup/supervisord.conf /etc
@@ -91,9 +95,15 @@ COPY setup/supervisord.conf /etc
 # Install CKAN
 RUN pip3 install -e git+${GIT_URL}@${CKAN_REF}#egg=ckan && \
     cd ${SRC_DIR}/ckan && \
+    cp who.ini ${APP_DIR} && \
+    # begin workaround
+    pip3 install "cython<3.0.0" && \
+    pip3 install "pyyaml==5.4.1" --no-build-isolation && \
+    # end workaround
+    pip3 install -r requirement-setuptools.txt && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
-    pip3 install -e git+https://github.com/okfn/ckanext-envvars.git@v0.0.6#egg=ckanext-envvars && \
+    pip3 install -e git+https://github.com/okfn/ckanext-envvars.git#egg=ckanext-envvars && \
     # Create and update CKAN config
     ckan generate config ${CKAN_INI} && \
     ckan config-tool ${CKAN_INI} "beaker.session.secret = " && \
@@ -113,11 +123,11 @@ ADD https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/wsgi.py ${APP_DIR}
 RUN chmod 644 ${APP_DIR}/wsgi.py
 
 # Create entrypoint directory for children image scripts
-RUN mkdir -p /docker-entrypoint.d
+ONBUILD RUN mkdir /docker-entrypoint.d
 
 EXPOSE 5000
 
-HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit CMD ["/srv/app/start_ckan.sh"]
+HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit 1
 
 CMD ["/srv/app/start_ckan.sh"]
 
@@ -140,6 +150,9 @@ RUN apk add --no-cache libffi-dev
 
 # Install CKAN dev requirements
 RUN pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/dev-requirements.txt
+
+# TODO: remove if requirements upgraded upstream
+RUN pip3 install -U pytest-rerunfailures
 
 # Create folder for local extensions sources
 RUN mkdir -p ${SRC_EXTENSIONS_DIR}
