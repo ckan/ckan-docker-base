@@ -22,8 +22,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-tags: true
+
+      - name: Fetch tags 
+        # Needed because of actions/checkout#1467
+        run: |
+          git fetch --tags --force
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
