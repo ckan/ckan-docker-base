@@ -5,6 +5,10 @@ if [ $(id -u) -ne 0 ]; then
     exit 1
 fi
 
+if [ "$USE_DEBUGPY_FOR_DEV" = true ] ; then
+    pip install debugpy
+fi
+
 # Install any local extensions in the src_extensions volume
 echo "Looking for local extensions to install..."
 echo "Extension dir contents:"
