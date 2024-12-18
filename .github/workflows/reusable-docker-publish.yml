@@ -111,6 +111,7 @@ jobs:
       - name: Build ${{ inputs.ckan-major-version }} base
         uses: docker/build-push-action@v6
         with:
+          platforms: linux/amd64,linux/arm64
           push: true
           context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
           file: ${{ inputs.docker-file }}
@@ -122,6 +123,7 @@ jobs:
       - name: Build ${{ inputs.ckan-major-version }} dev
         uses: docker/build-push-action@v6
         with:
+          platforms: linux/amd64,linux/arm64
           push: true
           context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
           file: ${{ inputs.docker-file }}
