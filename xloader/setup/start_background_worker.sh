@@ -3,11 +3,7 @@
 echo "###BJ### Starting background worker"
 
 if [[ $CKAN__PLUGINS == *"xloader"* ]]; then
-    # Add ckan.xloader.api_token to the CKAN config file (updated with corrected value later)
-    #echo "###BJ### Setting a temporary value for ckan.xloader.api_token"
-    #ckan config-tool $CKAN_INI ckan.xloader.api_token=xxx
-    echo "###BJ### Setting a value for ckanext.xloader.site_url"
-    ckan config-tool $CKAN_INI "ckan.xloader.api_token=$(ckan -c $CKAN_INI user token add ckan_admin xloader | tail -n 1 | tr -d '\t')"
+    ckan config-tool $CKAN_INI "ckanext.xloader.api_token=$(ckan -c $CKAN_INI user token add ckan_admin xloader | tail -n 1 | tr -d '\t')"
     ckan config-tool $CKAN_INI ckanext.xloader.site_url=http://ckan-dev:5000
 fi
 
@@ -20,9 +16,6 @@ then
     ckan config-tool $CKAN_INI "api_token.jwt.encode.secret=${JWT_SECRET}"
     ckan config-tool $CKAN_INI "api_token.jwt.decode.secret=${JWT_SECRET}"
 fi
-
-#echo "###BJ### Set up ckan.xloader.api_token in the CKAN config file"
-#   ckan config-tool $CKAN_INI "ckan.xloader.api_token=$(ckan -c $CKAN_INI user token add ckan_admin xloader | tail -n 1 | tr -d '\t')"
 
 # Run any startup scripts provided by images extending this one
 if [[ -d "/docker-entrypoint.d" ]]
