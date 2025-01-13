@@ -2,7 +2,7 @@
 FROM python:3.10-slim-bookworm
 
 # Tag passed through via the Makefile
-ARG CKAN_TAG=${CKAN_TAG}
+ARG CKAN_VERSION=${CKAN_VERSION}
 ARG XLOADER_VERSION=${XLOADER_VERSION}
 
 ENV TZ=UTC
@@ -20,7 +20,7 @@ ENV WORKER_PROCESS="ckan -c /srv/app/ckan.ini jobs worker"
 # Customize these in the environment (.env) file if needed
 ENV CKAN_SITE_URL=http://ckan-dev:5000
 ENV CKAN_CONTAINER_URL=http://ckan-dev:5000
-ENV CKAN__PLUGINS image_view text_view recline_view datastore xloader envvars
+ENV CKAN__PLUGINS image_view text_view datatables_view datastore xloader envvars
 
 # Set the working directory
 WORKDIR ${APP_DIR}
@@ -48,7 +48,9 @@ RUN apt-get install --no-install-recommends -y \
         linux-headers-generic \
         libtool \
         wget \
-        procps
+        procps \
+        curl \
+        vim
 
 # Create the src directory
 RUN mkdir -p ${SRC_DIR}
@@ -57,10 +59,11 @@ RUN mkdir -p ${SRC_DIR}
 COPY setup/start_background_worker.sh ${APP_DIR}
 
 # Install  the CKAN application, the dependency packages for CKAN plus some confiquration
-RUN cd ${SRC_DIR} && \
-    pip3 install -e git+${GIT_URL}@${CKAN_TAG}#egg=ckan && \
+RUN pip3 install -U pip && \
+    cd ${SRC_DIR} && \
+    pip3 install -e git+${GIT_URL}@${CKAN_VERSION}#egg=ckan && \
     cd ckan && \
-    cp who.ini ${APP_DIR} && \
+    #cp who.ini ${APP_DIR} && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
     pip3 install -e git+https://github.com/okfn/ckanext-envvars.git#egg=ckanext-envvars && \
@@ -70,8 +73,9 @@ RUN cd ${SRC_DIR} && \
     ckan config-tool ${CKAN_INI} "ckan.plugins = ${CKAN__PLUGINS}"
 
 # Install the XLoader extension
-RUN cd ${SRC_DIR} && \
-    pip3 install -e 'git+https://github.com/ckan/ckanext-xloader.git@master#egg=ckanext-xloader' && \
+RUN pip3 install -U pip && \ 
+    cd ${SRC_DIR} && \
+    pip3 install -e 'git+https://github.com/kowh-ai/ckanext-xloader.git@master#egg=ckanext-xloader' && \
     pip3 install -r ckanext-xloader/requirements.txt && \
     pip3 install -U requests[security]
 
@@ -87,5 +91,10 @@ ONBUILD RUN mkdir /docker-entrypoint.d
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s  --retries=3 \ 
   CMD pgrep ${WORKER_PROCESS} > /dev/null || exit 1
 
-#CMD ["/bin/bash"]
+#CMD ["/bin/sh"]
+COPY setup/api_token_test.sh ${APP_DIR}
+
+RUN chmod +x ${APP_DIR}/api_token_test.sh
+
+
 CMD ["/srv/app/start_background_worker.sh"]

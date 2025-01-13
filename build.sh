@@ -52,6 +52,7 @@ build_images() {
          -t "$alt_tag_name" \
          -t "$python_tag_name" \
          -t "$python_alt_tag_name" \
+         --no-cache \
          "ckan-$ckan_version_ref"
 }
 

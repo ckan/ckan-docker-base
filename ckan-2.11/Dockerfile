@@ -30,7 +30,7 @@ ENV GIT_URL=https://github.com/ckan/ckan.git
 
 # Customize these in the environment (.env) file if needed
 ENV CKAN_SITE_URL=http://localhost:5000
-ENV CKAN__PLUGINS="image_view text_view datatables_view datastore envvars"
+ENV CKAN__PLUGINS="image_view text_view datatables_view datastore xloader envvars"
 
 # UWSGI options
 ENV UWSGI_HARAKIRI=50
@@ -77,6 +77,13 @@ RUN pip3 install -U pip && \
     ckan generate config ${CKAN_INI} && \
     ckan config-tool ${CKAN_INI} "SECRET_KEY = " && \
     ckan config-tool ${CKAN_INI} "ckan.plugins = ${CKAN__PLUGINS}"
+
+# Install the XLoader extension
+RUN pip3 install -U pip && \ 
+    cd ${SRC_DIR} && \
+    pip3 install -e 'git+https://github.com/ckan/ckanext-xloader.git@master#egg=ckanext-xloader' && \
+    pip3 install -r ckanext-xloader/requirements.txt && \
+    pip3 install -U requests[security]
 
 # Create ckan and ckan-sys users and the ckan-sys group plus set up the storage path
 RUN groupadd -g 502 ckan-sys && \
