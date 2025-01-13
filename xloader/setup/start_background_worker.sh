@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "###BJ### Starting background worker"
-
 if [[ $CKAN__PLUGINS == *"xloader"* ]]; then
     ckan config-tool $CKAN_INI "ckanext.xloader.api_token=$(ckan -c $CKAN_INI user token add ckan_admin xloader | tail -n 1 | tr -d '\t')"
     ckan config-tool $CKAN_INI ckanext.xloader.site_url=http://ckan-dev:5000
