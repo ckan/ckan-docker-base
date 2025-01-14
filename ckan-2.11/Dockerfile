@@ -30,7 +30,7 @@ ENV GIT_URL=https://github.com/ckan/ckan.git
 
 # Customize these in the environment (.env) file if needed
 ENV CKAN_SITE_URL=http://localhost:5000
-ENV CKAN__PLUGINS="image_view text_view datatables_view datastore xloader envvars"
+ENV CKAN__PLUGINS="image_view text_view datatables_view datastore envvars"
 
 # UWSGI options
 ENV UWSGI_HARAKIRI=50
@@ -81,7 +81,7 @@ RUN pip3 install -U pip && \
 # Install the XLoader extension
 RUN pip3 install -U pip && \ 
     cd ${SRC_DIR} && \
-    pip3 install -e 'git+https://github.com/ckan/ckanext-xloader.git@master#egg=ckanext-xloader' && \
+    pip3 install -e 'git+https://github.com/kowh-ai/ckanext-xloader.git@master#egg=ckanext-xloader' && \
     pip3 install -r ckanext-xloader/requirements.txt && \
     pip3 install -U requests[security]
 
