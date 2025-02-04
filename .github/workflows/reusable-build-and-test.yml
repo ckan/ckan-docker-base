@@ -45,7 +45,7 @@ jobs:
       - name: Read version from VERSION file
         run: |
           VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/VERSION.txt")
-          if [[ $VERSION_VALUE != "master" ]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
+          if [[ $VERSION_VALUE != "master" && $VERSION_VALUE != dev*]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
           echo "Using ref $VERSION_VALUE in next steps"
           echo "CKAN_REF=$VERSION_VALUE" >> $GITHUB_ENV
 
