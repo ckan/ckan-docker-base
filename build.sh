@@ -38,6 +38,7 @@ build_images() {
         DOCKER_BUILDKIT=1 docker build \
             --build-arg="ENV=$env" \
             --build-arg="CKAN_REF=$ckan_tag" \
+            --platform linux/amd64,linux/arm64 \
             -t "$python_tag_name" \
             -t "$python_alt_tag_name" \
             -f "ckan-$ckan_version_ref/$python_dockerfile" \
@@ -48,6 +49,7 @@ build_images() {
     DOCKER_BUILDKIT=1 docker build \
         --build-arg="ENV=$env" \
         --build-arg="CKAN_REF=$ckan_tag" \
+        --platform linux/amd64,linux/arm64 \
          -t "$tag_name" \
          -t "$alt_tag_name" \
          -t "$python_tag_name" \
