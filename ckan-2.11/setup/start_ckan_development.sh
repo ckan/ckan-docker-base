@@ -6,6 +6,11 @@ if [[ $CKAN__PLUGINS == *"datapusher"* ]]; then
     ckan config-tool $CKAN_INI ckan.datapusher.api_token=xxx
 fi
 
+if [[ $CKAN__PLUGINS == *"xloader"* ]]; then
+    ckan config-tool $CKAN_INI "ckanext.xloader.api_token=$(ckan -c $CKAN_INI user token add ckan_admin xloader | tail -n 1 | tr -d '\t')"
+    ckan config-tool $CKAN_INI ckanext.xloader.site_url=http://ckan-dev:5000
+fi
+
 # Set debug to true
 echo "Enabling debug mode"
 ckan config-tool $CKAN_INI -s DEFAULT "debug = true"
