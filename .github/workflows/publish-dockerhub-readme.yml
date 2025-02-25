@@ -1,0 +1,36 @@
+---
+name: Push README to Docker Hub
+#https://github.com/christian-korneck/update-container-description-action
+#https://github.com/christian-korneck/update-container-description-action/blob/master/action.yml
+#https://hub.docker.com/layers/chko/docker-pushrm/1/images/sha256-29a68cc9b8990a3ef946e96765af00669cda93b71972d7e615ef346e28ee8f5b
+#uses: https://github.com/christian-korneck/docker-pushrm
+on:
+  release:
+    types: [released]
+jobs:
+  PushContainerReadme:
+    runs-on: ubuntu-latest
+    name: Push README to Docker Hub
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+      - name: push README to Dockerhub ckan/ckan-base
+        uses: christian-korneck/update-container-description-action@v1
+        env:
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
+        with:
+          destination_container_repo: ckan/ckan-base
+          provider: dockerhub
+          short_description: 'Official Base images for CKAN.'
+          readme_file: 'README.md'
+      - name: push README to Dockerhub ckan/ckan-dev
+        uses: christian-korneck/update-container-description-action@cf2977b0f3d189227f140ecbc6402c5a042b34e4
+        env:
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
+        with:
+          destination_container_repo: ckan/ckan-dev
+          provider: dockerhub
+          short_description: 'Official Dev Docker images for CKAN'
+          readme_file: 'README.md'
