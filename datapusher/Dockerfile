@@ -36,7 +36,7 @@ RUN apk add --no-cache \
     openssl-dev \
     cargo
 
-RUN mkdir ${APP_DIR}/src && cd ${APP_DIR}/src && \
+RUN mkdir -p ${APP_DIR}/src && cd ${APP_DIR}/src && \
     git clone -b ${DATAPUSHER_VERSION} --depth=1 --single-branch ${GIT_URL} && \
     cd datapusher && \
     python3 setup.py install

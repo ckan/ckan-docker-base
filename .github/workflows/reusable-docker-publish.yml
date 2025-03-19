@@ -1,0 +1,131 @@
+name: Reusable CKAN images build and push workflow
+
+on:
+  workflow_call:
+    inputs:
+      ckan-major-version:
+        required: true
+        type: string
+      docker-file:
+        required: false
+        default: 'Dockerfile'
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch tags 
+        # Needed because of actions/checkout#1467
+        run: |
+          git fetch --tags --force
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Generating tags from VERSION files
+        run: |
+          VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/VERSION.txt")
+          PY_VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/PYTHON_VERSION.txt")
+          LATEST_GIT_TAG=$(git describe --tags --abbrev=0)
+          CKAN_MAJOR_VERSION=${{ inputs.ckan-major-version }}
+          DOCKERFILE_NAME=${{ inputs.docker-file }}
+
+          if [[ "$CKAN_MAJOR_VERSION" == "master" ]]; then
+
+              # Master
+
+              BASE_TAGS="ckan/ckan-base:${{ inputs.ckan-major-version}},
+                         ckan/ckan-base:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE,
+                         ckan/ckan-base:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE-$LATEST_GIT_TAG"
+
+              DEV_TAGS="ckan/ckan-dev:${{ inputs.ckan-major-version}},
+                        ckan/ckan-dev:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE,
+                        ckan/ckan-dev:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE-$LATEST_GIT_TAG"
+
+          elif [[ "$CKAN_MAJOR_VERSION" == "2.9" || "$CKAN_MAJOR_VERSION" == "2.10" ]]; then
+
+              if [[ "$DOCKERFILE_NAME" == "Dockerfile" ]]; then
+                  # 2.9 / 2.10 Alpine
+                  BASE_TAGS="ckan/ckan-base:${{ inputs.ckan-major-version}},
+                             ckan/ckan-base:$VERSION_VALUE,
+                             ckan/ckan-base:${{ inputs.ckan-major-version}}-$LATEST_GIT_TAG"
+                  DEV_TAGS="ckan/ckan-dev:${{ inputs.ckan-major-version}},
+                            ckan/ckan-dev:$VERSION_VALUE,
+                            ckan/ckan-dev:${{ inputs.ckan-major-version}}-$LATEST_GIT_TAG"
+              else
+                  # 2.9 / 2.10 Python
+                  BASE_TAGS="ckan/ckan-base:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE,
+                             ckan/ckan-base:$VERSION_VALUE-py$PY_VERSION_VALUE,
+                             ckan/ckan-base:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE-$LATEST_GIT_TAG"
+                  DEV_TAGS="ckan/ckan-dev:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE,
+                            ckan/ckan-dev:$VERSION_VALUE-py$PY_VERSION_VALUE,
+                            ckan/ckan-dev:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE-$LATEST_GIT_TAG"
+              fi
+
+          else
+
+              # 2.11 onwards
+
+              BASE_TAGS="ckan/ckan-base:${{ inputs.ckan-major-version}},
+                         ckan/ckan-base:$VERSION_VALUE,
+                         ckan/ckan-base:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE,
+                         ckan/ckan-base:$VERSION_VALUE-py$PY_VERSION_VALUE,
+                         ckan/ckan-base:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE-$LATEST_GIT_TAG"
+
+              DEV_TAGS="ckan/ckan-dev:${{ inputs.ckan-major-version}},
+                         ckan/ckan-dev:$VERSION_VALUE,
+                         ckan/ckan-dev:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE,
+                         ckan/ckan-dev:$VERSION_VALUE-py$PY_VERSION_VALUE,
+                         ckan/ckan-dev:${{ inputs.ckan-major-version}}-py$PY_VERSION_VALUE-$LATEST_GIT_TAG"
+          fi
+
+          BASE_TAGS=$(echo $BASE_TAGS | sed 's/ //g')
+          DEV_TAGS=$(echo $DEV_TAGS | sed 's/ //g')
+
+          echo "BASE_TAGS=$BASE_TAGS" >> $GITHUB_ENV
+          echo "DEV_TAGS=$DEV_TAGS" >> $GITHUB_ENV
+
+          # CKAN_REF
+          if [[ $VERSION_VALUE != "master" ]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
+          echo "CKAN_REF=$VERSION_VALUE" >> $GITHUB_ENV
+
+          echo "Using base tags $BASE_TAGS in next steps"
+          echo "Using dev tags $DEV_TAGS in next steps"
+          echo "Using ref $VERSION_VALUE in next steps"
+
+      - name: Build ${{ inputs.ckan-major-version }} base
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
+          file: ${{ inputs.docker-file }}
+          build-args: |
+            CKAN_REF=${{ env.CKAN_REF }}
+            ENV=base
+          tags: ${{ env.BASE_TAGS }}
+
+      - name: Build ${{ inputs.ckan-major-version }} dev
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
+          file: ${{ inputs.docker-file }}
+          build-args: |
+            CKAN_REF=${{ env.CKAN_REF }}
+            ENV=dev
+          tags: ${{ env.DEV_TAGS }}

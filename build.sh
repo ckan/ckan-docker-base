@@ -12,7 +12,7 @@ set_vars() {
     python_dockerfile=Dockerfile.py$python_version
     tag_name="ckan/ckan-$env:$ckan_version"
     python_tag_name="ckan/ckan-$env:$ckan_version-py$python_version"
-    if [ "$ckan_version" = "master" ]; then
+    if [[ "$ckan_version" == "master" || "$ckan_version" == dev* ]]; then
         ckan_tag=$ckan_version
         alt_tag_name=$tag_name
         python_alt_tag_name=$python_tag_name

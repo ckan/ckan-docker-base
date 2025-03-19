@@ -59,6 +59,7 @@ RUN apt-get install --no-install-recommends -y \
         g++ \
         linux-headers-generic \
         libtool \
+        patch \
         wget
 
 # Create the src directory
@@ -136,10 +137,11 @@ pip3 install -r https://raw.githubusercontent.com/ckan/ckan/${CKAN_REF}/dev-requ
 
 COPY --chown=ckan-sys:ckan-sys setup/unsafe.cert setup/unsafe.key setup/start_ckan_development.sh setup/install_src.sh ${APP_DIR}
 
-# Update local directories
+# Update local directories, /srv/app as writable home dir
 RUN mkdir -p ${SRC_EXTENSIONS_DIR} /var/lib/ckan && \
     chown -R ckan-sys:ckan-sys ${SRC_EXTENSIONS_DIR} && \
     chown -R ckan:ckan-sys /var/lib/ckan/ && \
+    chown ckan:ckan-sys /srv/app/ && \
     chmod 775 ${SRC_EXTENSIONS_DIR}
 
 USER ckan
