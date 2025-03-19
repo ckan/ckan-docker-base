@@ -1,7 +1,7 @@
 .PHONY: all help build build-all push
 SHELL := /bin/bash
-CKAN_VERSION=2.11.1
-XLOADER_VERSION=2.0.0
+CKAN_VERSION=2.11.2
+XLOADER_VERSION=2.1.0
 CKAN_VERSION_MAJOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f1)
 CKAN_VERSION_MINOR=$(shell echo $(CKAN_VERSION) | cut -d'.' -f2)
 TAG_NAME="ckan/ckan-base-xloader:$(XLOADER_VERSION)"
@@ -12,7 +12,7 @@ help:
 
 build:	## Build CKAN XLoader images , `make build`
 	echo "Building $(TAG_NAME) images"
-	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" --build-arg="XLOADER_TAG=$(XLOADER_VERSION)" -t $(TAG_NAME) --no-cache .
+	docker build --build-arg="CKAN_VERSION=ckan-$(CKAN_VERSION)" --build-arg="XLOADER_VERSION=$(XLOADER_VERSION)" -t $(TAG_NAME) --no-cache .
 
 push: ## Push CKAN XLoader images to the DockerHub registry, `make push`
 	echo "Pushing $(TAG_NAME) image"

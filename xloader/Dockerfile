@@ -75,26 +75,46 @@ RUN pip3 install -U pip && \
 # Install the XLoader extension
 RUN pip3 install -U pip && \ 
     cd ${SRC_DIR} && \
-    pip3 install -e 'git+https://github.com/kowh-ai/ckanext-xloader.git@master#egg=ckanext-xloader' && \
+    pip3 install -e git+https://github.com/ckan/ckanext-xloader.git@${XLOADER_VERSION}#egg=ckanext-xloader && \
     pip3 install -r ckanext-xloader/requirements.txt && \
+    pip3 install -r ckanext-xloader/dev-requirements.txt && \
     pip3 install -U requests[security]
 
-# Create a local user and group plus set up the storage path
-RUN groupadd -g 92 ckan && \
-    useradd -rm -d /srv/app -s /bin/bash -g ckan -u 92 ckan && \
-    mkdir -p ${CKAN_STORAGE_PATH} && \
-    chown -R ckan:ckan ${CKAN_STORAGE_PATH}
+# Create ckan and ckan-sys users and the ckan-sys group plus set up the storage path
+RUN groupadd -g 502 ckan-sys && \
+    useradd -rm -d /srv/app -s /bin/bash -g ckan-sys -u 502 ckan-sys && \
+    useradd -rm -d /srv/app -s /bin/bash -g ckan-sys -u 503 ckan
 
 # Create entrypoint directory for children image scripts
-ONBUILD RUN mkdir /docker-entrypoint.d
+RUN mkdir -p /docker-entrypoint.d && chmod 755 /docker-entrypoint.d
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s  --retries=3 \ 
-  CMD pgrep ${WORKER_PROCESS} > /dev/null || exit 1
+# Set the ownership of the app directory, usr/local and the entrypoint directory to the ckan-sys user
+RUN chown -R ckan-sys:ckan-sys ${APP_DIR} && \
+    chown -R ckan-sys:ckan-sys /docker-entrypoint.d && \
+    chown -R ckan-sys:ckan-sys /usr/local
 
-#CMD ["/bin/sh"]
-COPY setup/api_token_test.sh ${APP_DIR}
+# Set the ownership of the CKAN config file, src and the storage path to the ckan user
+RUN chown ckan:ckan-sys ${APP_DIR}/ckan.ini && \
+    chown -R ckan:ckan-sys ${APP_DIR}/src && \
+    mkdir -p ${CKAN_STORAGE_PATH} && \
+    chown -R ckan:ckan-sys ${CKAN_STORAGE_PATH}
 
-RUN chmod +x ${APP_DIR}/api_token_test.sh
+USER ckan
 
+# Create a local user and group plus set up the storage path
+#RUN groupadd -g 92 ckan && \
+#    useradd -rm -d /srv/app -s /bin/bash -g ckan -u 92 ckan && \
+#    mkdir -p ${CKAN_STORAGE_PATH} && \
+#    chown -R ckan:ckan ${CKAN_STORAGE_PATH}
+
+# Create entrypoint directory for children image scripts
+#ONBUILD RUN mkdir /docker-entrypoint.d
+
+#HEALTHCHECK --interval=30s --timeout=10s --start-period=5s  --retries=3 \ 
+#  CMD pgrep ${WORKER_PROCESS} > /dev/null || exit 1
+
+#COPY setup/api_token_test.sh ${APP_DIR}
+
+#RUN chmod +x ${APP_DIR}/api_token_test.sh
 
 CMD ["/srv/app/start_background_worker.sh"]

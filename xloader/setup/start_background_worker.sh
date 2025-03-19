@@ -2,7 +2,10 @@
 
 if [[ $CKAN__PLUGINS == *"xloader"* ]]; then
     ckan config-tool $CKAN_INI "ckanext.xloader.api_token=$(ckan -c $CKAN_INI user token add ckan_admin xloader | tail -n 1 | tr -d '\t')"
-    ckan config-tool $CKAN_INI ckanext.xloader.site_url=http://ckan-dev:5000
+    #ckan config-tool $CKAN_INI ckanext.xloader.site_url=http://ckan-dev:5000
+    if [[ -n ${XLOADER_SITE_URL} ]]; then
+        ckan config-tool $CKAN_INI ckanext.xloader.site_url=${XLOADER_SITE_URL}
+    fi
 fi
 
 if grep -qE "beaker.session.secret ?= ?$" ckan.ini
