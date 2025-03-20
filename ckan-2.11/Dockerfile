@@ -79,13 +79,6 @@ RUN pip3 install -U pip && \
     ckan config-tool ${CKAN_INI} "SECRET_KEY = " && \
     ckan config-tool ${CKAN_INI} "ckan.plugins = ${CKAN__PLUGINS}"
 
-# Install the XLoader extension
-RUN pip3 install -U pip && \ 
-    cd ${SRC_DIR} && \
-    pip3 install -e 'git+https://github.com/kowh-ai/ckanext-xloader.git@master#egg=ckanext-xloader' && \
-    pip3 install -r ckanext-xloader/requirements.txt && \
-    pip3 install -U requests[security]
-
 # Create ckan and ckan-sys users and the ckan-sys group plus set up the storage path
 RUN groupadd -g 502 ckan-sys && \
     useradd -rm -d /srv/app -s /bin/bash -g ckan-sys -u 502 ckan-sys && \
