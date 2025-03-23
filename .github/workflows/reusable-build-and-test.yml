@@ -59,6 +59,7 @@ jobs:
           build-args: |
             CKAN_REF=${{ env.CKAN_REF }}
             ENV=base
+            PYTHON_VERSION=3.10
           tags: |
             ckan-base-${{ inputs.ckan-major-version }}-local
 
