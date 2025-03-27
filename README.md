@@ -75,10 +75,11 @@ All operations are done using the `build.sh` script located at the root of the r
 ```
 Usage: ./build.sh <action> [<params>]
 Available actions:
-  versions                   - Shows the current CKAN versions used
-  build <version> [base|dev] - Builds images for a CKAN version
-                               Pass 'base' or 'dev' to just build these.
-  push  <version>            - Pushes images to the Docker Hub
+  versions                                - Shows the current CKAN versions used
+  build <version> [base|dev] [py version] - Builds images for a CKAN version
+                                          - Pass 'base' or 'dev' to just build these.
+                                          - Optionally specify a Python version.
+  push  <version>                         - Pushes images to the Docker Hub
 
 ```
 
@@ -88,8 +89,13 @@ For instance:
 ./build.sh build 2.11
 
 ./build.sh build master
+./build.sh build 2.11
 ./build.sh build 2.10 base
 ./build.sh build 2.9 dev
+./build.sh build 2.11 3.11
+./build.sh build 2.9 3.10
+./build.sh build 2.11 base 3.11
+./build.sh build 2.10 dev 3.10
 ```
 
 
