@@ -53,7 +53,7 @@ jobs:
         run: |
             PYTHON_VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/PYTHON_VERSION.txt")
             echo "Using ref $PYTHON_VERSION_VALUE in next steps"
-            echo "PYTHON_VERSION=$PYTHON_VERSION_VALUE" >> $GITHUB_ENV
+            echo "PYTHON_REF=$PYTHON_VERSION_VALUE" >> $GITHUB_ENV
 
       - name: Build base image
         uses: docker/build-push-action@v6
