@@ -82,6 +82,8 @@ Available actions:
   push  <version>                         - Pushes images to the Docker Hub
 
 ```
+In the absence of a specified Python version, the version defined in PYTHON_VERSION.txt 
+will be used as the default
 
 For instance:
 
