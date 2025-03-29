@@ -106,7 +106,9 @@ Of course the images can be built directly
 For instance:
 
 ```
-docker build --build-arg ENV=base --build-arg CKAN_REF=ckan-2.11.2 --build-arg PYTHON_VERSION=3.11
-docker build --build-arg ENV=dev --build-arg CKAN_REF=ckan-2.10.7 --build-arg PYTHON_VERSION=3.10
-docker build --build-arg ENV=base --build-arg CKAN_REF=master --build-arg PYTHON_VERSION=3.11
+docker build --build-arg=ENV=base --build-arg=CKAN_REF=ckan-2.11.2 --build-arg=PYTHON_VERSION=3.11 -t ckan/ckan-base:2.11.2 -t ckan/ckan-base:2.11 -t ckan/ckan-base:2.11.2-py3.11 -t ckan/ckan-base:2.11-py3.11 ckan-2.11
+
+docker build --build-arg=ENV=base --build-arg=CKAN_REF=master --build-arg=PYTHON_VERSION=3.10 -t ckan/ckan-base:master -t ckan/ckan-base:master -t ckan/ckan-base:master-py3.10 -t ckan/ckan-base:master-py3.10 ckan-master
+
+docker build --build-arg=ENV=dev --build-arg=CKAN_REF=ckan-2.9.11 -t ckan/ckan-dev:2.9.11-py3.9 -t ckan/ckan-dev:2.9-py3.9 -f ckan-2.9/Dockerfile.py3.9 ckan-2.9
 ```
