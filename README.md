@@ -89,7 +89,6 @@ For instance:
 
 ```
 ./build.sh build 2.11
-
 ./build.sh build master
 ./build.sh build 2.11
 ./build.sh build 2.10 base
@@ -100,4 +99,14 @@ For instance:
 ./build.sh build 2.10 dev 3.10
 ```
 
+### Building the images directly
 
+Of course the images can be built directly
+
+For instance:
+
+```
+docker build --build-arg ENV=base --build-arg CKAN_REF=ckan-2.11.2 --build-arg PYTHON_VERSION=3.11
+docker build --build-arg ENV=dev --build-arg CKAN_REF=ckan-2.10.7 --build-arg PYTHON_VERSION=3.10
+docker build --build-arg ENV=base --build-arg CKAN_REF=master --build-arg PYTHON_VERSION=3.11
+```

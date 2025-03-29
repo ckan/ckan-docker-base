@@ -10,6 +10,10 @@ on:
         required: false
         default: 'Dockerfile'
         type: string
+      python-version:
+        required: false
+        default: ''
+        type: string
 
 jobs:
   build_and_test:
@@ -54,6 +58,12 @@ jobs:
             PYTHON_VERSION_VALUE=$(cat "ckan-${{ inputs.ckan-major-version }}/PYTHON_VERSION.txt")
             echo "Using ref $PYTHON_VERSION_VALUE in next steps"
             echo "PYTHON_REF=$PYTHON_VERSION_VALUE" >> $GITHUB_ENV
+
+      - name: Override Python version if input is provided
+        if: inputs.python-version != ''
+        run: |
+            echo "Overriding Python version with user input: ${{ inputs.python-version }}"
+            echo "PYTHON_REF=${{ inputs.python-version }}" >> $GITHUB_ENV
 
       - name: Build base image
         uses: docker/build-push-action@v6
