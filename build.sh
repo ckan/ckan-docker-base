@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 
@@ -34,7 +33,8 @@ build_images() {
     set_vars "$ckan_version_ref" "$env"
 
     if [ -f "ckan-$ckan_version_ref/$python_dockerfile" ]; then
-        # Build Python image if there's a separate .pyXX Dockerfile
+        # Build Python/debian-based image first if there's a separate .pyXX Dockerfile
+        # tag image with Python tags only
         DOCKER_BUILDKIT=1 docker build \
             --build-arg="ENV=$env" \
             --build-arg="CKAN_REF=$ckan_tag" \
@@ -42,17 +42,27 @@ build_images() {
             -t "$python_alt_tag_name" \
             -f "ckan-$ckan_version_ref/$python_dockerfile" \
             "ckan-$ckan_version_ref"
-    fi
+        
+        # Now build alpine-based image and use generic tags
+        DOCKER_BUILDKIT=1 docker build \
+            --build-arg="ENV=$env" \
+            --build-arg="CKAN_REF=$ckan_tag" \
+            -t "$tag_name" \
+            -t "$alt_tag_name" \
+            "ckan-$ckan_version_ref"
 
-    # Build image 
-    DOCKER_BUILDKIT=1 docker build \
-        --build-arg="ENV=$env" \
-        --build-arg="CKAN_REF=$ckan_tag" \
-         -t "$tag_name" \
-         -t "$alt_tag_name" \
-         -t "$python_tag_name" \
-         -t "$python_alt_tag_name" \
-         "ckan-$ckan_version_ref"
+    else
+        # Only build Python/debian-based image and tag with Python plus generic tags
+        DOCKER_BUILDKIT=1 docker build \
+            --build-arg="ENV=$env" \
+            --build-arg="CKAN_REF=$ckan_tag" \
+            -t "$tag_name" \
+            -t "$alt_tag_name" \
+            -t "$python_tag_name" \
+            -t "$python_alt_tag_name" \
+            "ckan-$ckan_version_ref"
+    fi
+ 
 }
 
 
