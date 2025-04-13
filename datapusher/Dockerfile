@@ -34,7 +34,8 @@ RUN apk add --no-cache \
     libxml2-dev \
     libxslt-dev \
     openssl-dev \
-    cargo
+    cargo \
+    wget
 
 RUN mkdir -p ${APP_DIR}/src && cd ${APP_DIR}/src && \
     git clone -b ${DATAPUSHER_VERSION} --depth=1 --single-branch ${GIT_URL} && \
