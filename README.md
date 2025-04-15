@@ -75,21 +75,40 @@ All operations are done using the `build.sh` script located at the root of the r
 ```
 Usage: ./build.sh <action> [<params>]
 Available actions:
-  versions                   - Shows the current CKAN versions used
-  build <version> [base|dev] - Builds images for a CKAN version
-                               Pass 'base' or 'dev' to just build these.
-  push  <version>            - Pushes images to the Docker Hub
+  versions                                - Shows the current CKAN versions used
+  build <version> [base|dev] [py version] - Builds images for a CKAN version
+                                          - Pass 'base' or 'dev' to just build these.
+                                          - Optionally specify a Python version.
+  push  <version>                         - Pushes images to the Docker Hub
 
 ```
+In the absence of a specified Python version, the version defined in PYTHON_VERSION.txt 
+will be used as the default
 
 For instance:
 
 ```
 ./build.sh build 2.11
-
 ./build.sh build master
+./build.sh build 2.11
 ./build.sh build 2.10 base
 ./build.sh build 2.9 dev
+./build.sh build 2.11 3.11
+./build.sh build 2.9 3.10
+./build.sh build 2.11 base 3.11
+./build.sh build 2.10 dev 3.10
 ```
 
+### Building the images directly
 
+Of course the images can be built directly
+
+For instance:
+
+```
+docker build --build-arg=ENV=base --build-arg=CKAN_REF=ckan-2.11.2 --build-arg=PYTHON_VERSION=3.11 -t ckan/ckan-base:2.11.2 -t ckan/ckan-base:2.11 -t ckan/ckan-base:2.11.2-py3.11 -t ckan/ckan-base:2.11-py3.11 ckan-2.11
+
+docker build --build-arg=ENV=base --build-arg=CKAN_REF=master --build-arg=PYTHON_VERSION=3.10 -t ckan/ckan-base:master -t ckan/ckan-base:master -t ckan/ckan-base:master-py3.10 -t ckan/ckan-base:master-py3.10 ckan-master
+
+docker build --build-arg=ENV=dev --build-arg=CKAN_REF=ckan-2.9.11 -t ckan/ckan-dev:2.9.11-py3.9 -t ckan/ckan-dev:2.9-py3.9 -f ckan-2.9/Dockerfile.py3.9 ckan-2.9
+```

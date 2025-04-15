@@ -1,6 +1,7 @@
 ARG ENV=base
+ARG PYTHON_VERSION
 
-FROM python:3.10-slim-bookworm AS python
+FROM python:${PYTHON_VERSION}-slim-bookworm AS python
 
 
 # ┌─────────────────────────────────────────────────────────────┐
