@@ -1,6 +1,41 @@
 #!/bin/bash
 set -e
 
+check_push_msg="Are you sure you want to push these images? (y/N): "
+
+log() {
+    echo "[INFO] $1"
+}
+
+show_versions() {
+    echo "Available CKAN versions:"
+    count=1
+    for dir in ckan-*; do
+        if [ -f "$dir/VERSION.txt" ]; then
+            patchversion=$(<"$dir/VERSION.txt")
+            minorversion="${patchversion%.*}"
+            echo "$count. $minorversion (patch version: $patchversion)"
+            ((count++))
+        fi
+    done
+}
+
+push_images() {
+    local ckan_version_ref="$1"
+    local env="$2"
+    set_vars "$ckan_version_ref" "$env"
+
+    log "Pushing image: $tag_name"
+    docker push "$tag_name"
+    docker push "$alt_tag_name"
+
+    if [[ -n "$python_dockerfile" ]]; then
+        log "Pushing image: $python_tag_name"
+        docker push "$python_tag_name"
+        docker push "$python_alt_tag_name"
+    fi
+}
+
 set_vars() {
     local ckan_version_ref="$1"
     local env="$2"
@@ -13,7 +48,18 @@ set_vars() {
         PYTHON_VERSION="$python_version"
     fi
 
-    python_dockerfile=Dockerfile.py$PYTHON_VERSION
+    pattern="Dockerfile.py*"
+    dir="ckan-$ckan_version_ref"
+    matches=("$dir"/$pattern)
+
+    if [ -e "${matches[0]}" ]; then
+        python_dockerfile_incl_path="${matches[0]}"
+        python_dockerfile=$(basename "$python_dockerfile_incl_path")
+        log "Python Dockerfile found: $python_dockerfile"
+    else
+        log "No Python Dockerfile found."
+    fi
+
     tag_name="ckan/ckan-$env:$ckan_version"
     python_tag_name="ckan/ckan-$env:$ckan_version-py$PYTHON_VERSION"
     if [[ "$ckan_version" == "master" || "$ckan_version" == dev* ]]; then
@@ -36,37 +82,37 @@ build_images() {
 
     set_vars "$ckan_version_ref" "$env" "$python_version"
 
-    if [ -f "ckan-$ckan_version_ref/$python_dockerfile" ]; then
-        # Build Python/debian-based image first if there's a separate .pyXX Dockerfile
-        # tag image with Python tags only
+    if compgen -G "ckan-$ckan_version_ref/Dockerfile.py*" > /dev/null; then
+        log "1/2 Building $ckan_version_ref Python-based image"
         DOCKER_BUILDKIT=1 docker build \
             --build-arg="ENV=$env" \
             --build-arg="CKAN_REF=$ckan_tag" \
+            --build-arg="PYTHON_VERSION=$PYTHON_VERSION" \
             -t "$python_tag_name" \
             -t "$python_alt_tag_name" \
             -f "ckan-$ckan_version_ref/$python_dockerfile" \
             "ckan-$ckan_version_ref"
-        
-        # Now build alpine-based image and use generic tags
+
+        log "2/2 Building $ckan_version_ref alpine-based image"
         DOCKER_BUILDKIT=1 docker build \
             --build-arg="ENV=$env" \
             --build-arg="CKAN_REF=$ckan_tag" \
+            --build-arg="PYTHON_VERSION=$PYTHON_VERSION" \
             -t "$tag_name" \
             -t "$alt_tag_name" \
             "ckan-$ckan_version_ref"
-
     else
-        # Only build Python/debian-based image and tag with Python plus generic tags
+        log "1/1 Building $ckan_version_ref Python-based image"
         DOCKER_BUILDKIT=1 docker build \
             --build-arg="ENV=$env" \
             --build-arg="CKAN_REF=$ckan_tag" \
+            --build-arg="PYTHON_VERSION=$PYTHON_VERSION" \
             -t "$tag_name" \
             -t "$alt_tag_name" \
             -t "$python_tag_name" \
             -t "$python_alt_tag_name" \
             "ckan-$ckan_version_ref"
     fi
- 
 }
 
 show_usage() {
@@ -105,38 +151,30 @@ case "$action" in
             exit 1
         fi
 
-        # Shift to handle optional arguments more flexibly
         shift 2
 
         base_or_dev=""
         python_version=""
 
-        # Process remaining arguments
         while [[ $# -gt 0 ]]; do
             case "$1" in
                 "base"|"dev")
                     base_or_dev="$1"
                     ;;
                 *)
-                    # Assume it's a Python version
                     python_version="$1"
                     ;;
             esac
             shift
         done
 
-        # Determine which images to build
         if [ -z "$base_or_dev" ]; then
             build_base=true
             build_dev=true
         else
             case "$base_or_dev" in
-                "base")
-                    build_base=true
-                    ;;
-                "dev")
-                    build_dev=true
-                    ;;
+                "base") build_base=true ;;
+                "dev")  build_dev=true  ;;
                 *)
                     echo "Invalid option: $base_or_dev. Use 'base' or 'dev'."
                     show_usage
@@ -145,12 +183,10 @@ case "$action" in
             esac
         fi
 
-        # Build base image if requested
         if [ "$build_base" = true ]; then
             build_images "$ckan_version_ref" "base" "$python_version"
         fi
 
-        # Build dev image if requested
         if [ "$build_dev" = true ]; then
             build_images "$ckan_version_ref" "dev" "$python_version"
         fi
@@ -170,3 +206,4 @@ case "$action" in
         show_usage
         ;;
 esac
+
