@@ -25,6 +25,7 @@ RUN apk add --no-cache \
     uwsgi-http \
     uwsgi-corerouter \
     uwsgi-python \
+    wget \
     # Temporary packages to build DataPusher requirements
     && apk add --no-cache --virtual .build-deps \
     gcc \
@@ -34,8 +35,7 @@ RUN apk add --no-cache \
     libxml2-dev \
     libxslt-dev \
     openssl-dev \
-    cargo \
-    wget
+    cargo
 
 RUN mkdir -p ${APP_DIR}/src && cd ${APP_DIR}/src && \
     git clone -b ${DATAPUSHER_VERSION} --depth=1 --single-branch ${GIT_URL} && \
