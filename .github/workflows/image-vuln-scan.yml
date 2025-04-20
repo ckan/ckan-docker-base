@@ -1,0 +1,54 @@
+name: Daily DockerHub Vulnerability Scan
+
+on:
+  schedule:
+    - cron: '30 9 * * *' # Every day at 9:30 AM UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  scan-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Trivy
+        uses: aquasecurity/trivy-action@master
+
+      - name: Create report directory
+        run: mkdir -p reports
+
+      - name: Define DockerHub images to scan
+        id: image-list
+        run: |
+          echo "IMAGES=ckan/ckan-base:2.11 ckan/ckan-dev:2.11" >> $GITHUB_ENV
+
+      - name: Scan DockerHub images with Trivy
+        run: |
+          for IMAGE in $IMAGES; do
+            SAFE_IMAGE_NAME=$(echo $IMAGE | sed 's/[:\/]/_/g')
+            trivy image --severity CRITICAL,HIGH --format table --output "reports/${SAFE_IMAGE_NAME}.txt" $IMAGE
+          done
+
+      - name: Combine reports into one
+        run: |
+          echo "Docker Image Vulnerability Report - $(date)" > reports/final_report.txt
+          echo "=========================================" >> reports/final_report.txt
+          for FILE in reports/*.txt; do
+            [ "$FILE" != "reports/final_report.txt" ] && cat "$FILE" >> reports/final_report.txt && echo -e "\n\n" >> reports/final_report.txt
+          done
+
+      - name: Send report via email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.example.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "DockerHub Vulnerability Report - $(date +'%Y-%m-%d')"
+          to: brett@kowh.ai
+          from: GitHub Actions <brett@kowh.ai>
+          content_type: text/plain
+          body: |
+            Please find the attached daily vulnerability report for DockerHub images.
+          attachments: reports/final_report.txt
