@@ -117,7 +117,7 @@ jobs:
           build-args: |
             CKAN_REF=${{ env.CKAN_REF }}
             ENV=base
-            ${{ inputs.ckan-major-version == '2.11' && 'PYTHON_VERSION=${{ env.PY_VERSION_VALUE }}' || '' }}
+            ${{ env.PY_VERSION_VALUE && 'PYTHON_VERSION=${{ env.PY_VERSION_VALUE }}' || '' }}
           tags: ${{ env.BASE_TAGS }}
 
       - name: Build ${{ inputs.ckan-major-version }} dev
