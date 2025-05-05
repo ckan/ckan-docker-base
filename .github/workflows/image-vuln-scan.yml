@@ -1,50 +1,53 @@
-name: Daily DockerHub Vulnerability Scan
+name: CKAN Docker Image Scan with Snyk
 
 on:
   schedule:
-    - cron: '30 9 * * *' # Every day at 9:30 AM UTC
-  workflow_dispatch: # Allow manual trigger
+    # Run weekly on Monday at 9:00 AM
+    - cron: '0 9 * * 1'
+  # Allow manual trigger
+  workflow_dispatch:
 
 jobs:
-  scan-images:
+  snyk-docker-scan:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        docker-image:
+          - 'ckan/ckan-base:master'
+          - 'ckan/ckan-base:2.11'
+          - 'ckan/ckan-dev:2.11'
+          - 'ckan/ckan-base:2.10-py3.10'
+          - 'ckan/ckan-dev:2.10-py3.10'
+          - 'ckan/ckan-base-datapusher:0.0.21'
+      # Don't fail the entire workflow if one image scan fails
+      fail-fast: false
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Snyk
-        uses: snyk/actions/setup@v2
-        with:
-          version: 'latest'
+      - name: Set up Snyk CLI
+        uses: snyk/actions/setup@master
 
-      - name: Authenticate Snyk
+      - name: Log in to Snyk
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
-
-      - name: Create report directory
-        run: mkdir -p reports
-
-      - name: Define DockerHub images to scan
-        id: image-list
+        
+      # Scan the Docker image
+      - name: Snyk scan Docker image
         run: |
-          echo "IMAGES=ckan/ckan-base:2.11 ckan/ckan-dev:2.11" >> $GITHUB_ENV
-
-      - name: Scan DockerHub images with Snyk
+          snyk container test ${{ matrix.docker-image }} \
+            --severity-threshold=high \
+            --org=${{ secrets.SNYK_ORG }} \
+            --project-name=${{ matrix.docker-image }} \
+            --report
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      
+      - name: Monitor Docker image
         run: |
-          for IMAGE in $IMAGES; do
-            SAFE_IMAGE_NAME=$(echo $IMAGE | sed 's/[:\/]/_/g')
-            snyk container test $IMAGE --json > "reports/${SAFE_IMAGE_NAME}.json"
-          done
-
-      - name: Combine reports into one
-        run: |
-          echo "Docker Image Vulnerability Report - $(date)" > reports/final_report.txt
-          echo "=========================================" >> reports/final_report.txt
-          for FILE in reports/*.json; do
-            [ "$FILE" != "reports/final_report.txt" ] && cat "$FILE" >> reports/final_report.txt && echo -e "\n\n" >> reports/final_report.txt
-          done
-
-      - name: Upload report as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: docker-vulnerability-report
-          path: reports/
+          snyk container monitor ${{ matrix.docker-image }} \
+            --org=${{ secrets.SNYK_ORG }} \
+            --project-name=${{ matrix.docker-image }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
