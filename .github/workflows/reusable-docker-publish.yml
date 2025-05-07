@@ -98,6 +98,7 @@ jobs:
 
           echo "BASE_TAGS=$BASE_TAGS" >> $GITHUB_ENV
           echo "DEV_TAGS=$DEV_TAGS" >> $GITHUB_ENV
+          echo "PY_VERSION_VALUE=$PY_VERSION_VALUE" >> $GITHUB_ENV
 
           # CKAN_REF
           if [[ $VERSION_VALUE != "master" ]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
@@ -116,7 +117,7 @@ jobs:
           build-args: |
             CKAN_REF=${{ env.CKAN_REF }}
             ENV=base
-            ${{ env.PY_VERSION_VALUE && 'PYTHON_VERSION=${{ env.PY_VERSION_VALUE }}' || '' }}
+            PYTHON_VERSION=${{ env.PY_VERSION_VALUE || '' }}
           tags: ${{ env.BASE_TAGS }}
 
       - name: Build ${{ inputs.ckan-major-version }} dev
@@ -128,5 +129,5 @@ jobs:
           build-args: |
             CKAN_REF=${{ env.CKAN_REF }}
             ENV=dev
-            ${{ inputs.ckan-major-version == '2.11' && 'PYTHON_VERSION=${{ env.PY_VERSION_VALUE }}' || '' }}
+            PYTHON_VERSION=${{ env.PY_VERSION_VALUE || '' }}
           tags: ${{ env.DEV_TAGS }}
