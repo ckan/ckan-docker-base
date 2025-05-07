@@ -27,15 +27,24 @@ then
 fi
 
 # Set the common uwsgi options
-UWSGI_OPTS="--plugins http,python \
-            --socket /tmp/uwsgi.sock \
-            --wsgi-file /srv/app/wsgi.py \
-            --module wsgi:application \
-            --http 0.0.0.0:5000 \
-            --master --enable-threads \
-            --lazy-apps \
-            -p 2 -L -b 32768 --vacuum \
-            --harakiri $UWSGI_HARAKIRI"
+DEFAULT_UWSGI_OPTS="--plugins http,python \
+                    --socket /tmp/uwsgi.sock \
+                    --wsgi-file /srv/app/wsgi.py \
+                    --module wsgi:application \
+                    --http 0.0.0.0:5000 \
+                    --master --enable-threads \
+                    --lazy-apps \
+                    -p 2 -L -b 32768 --vacuum \
+                    --harakiri $UWSGI_HARAKIRI"
+
+# Use UWSGI_OPTS from environment if set, otherwise use defaults
+UWSGI_OPTS="${UWSGI_OPTS:-$DEFAULT_UWSGI_OPTS}"
+
+# Append EXTRA_UWSGI_OPTS if set
+if [ -n "$EXTRA_UWSGI_OPTS" ]
+then
+  UWSGI_OPTS="$UWSGI_OPTS $EXTRA_UWSGI_OPTS"
+fi
 
 if [ $? -eq 0 ]
 then

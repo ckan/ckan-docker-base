@@ -33,14 +33,24 @@ then
     done
 fi
 
-UWSGI_OPTS="--socket /tmp/uwsgi.sock \
-            --wsgi-file /srv/app/wsgi.py \
-            --module wsgi:application \
-            --http [::]:5000 \
-            --master --enable-threads \
-            --lazy-apps \
-            -p 2 -L -b 32768 --vacuum \
-            --harakiri $UWSGI_HARAKIRI"
+# Define default UWSGI options
+DEFAULT_UWSGI_OPTS="--socket /tmp/uwsgi.sock \
+                    --wsgi-file /srv/app/wsgi.py \
+                    --module wsgi:application \
+                    --http [::]:5000 \
+                    --master --enable-threads \
+                    --lazy-apps \
+                    -p 2 -L -b 32768 --vacuum \
+                    --harakiri ${UWSGI_HARAKIRI:-60}"
+
+# Use UWSGI_OPTS from environment if set, otherwise use defaults
+UWSGI_OPTS="${UWSGI_OPTS:-$DEFAULT_UWSGI_OPTS}"
+
+# Append EXTRA_UWSGI_OPTS if set
+if [ -n "$EXTRA_UWSGI_OPTS" ]
+then
+  UWSGI_OPTS="$UWSGI_OPTS $EXTRA_UWSGI_OPTS"
+fi
 
 if [ $? -eq 0 ]
 then

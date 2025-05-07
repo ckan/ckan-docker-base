@@ -49,6 +49,9 @@ ckan-X.XX
 
 ```
 
+`start_ckan.sh` contains environment variables to configure the behavior of the [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) server that runs CKAN.
+See [here](https://github.com/ckan/ckan-docker#uwsgi-command-line-arguments) to find the documentation of the available options.
+
 ### Release
 
 Images are built and pushed to the Docker Hub after a new [release](https://github.com/ckan/ckan-docker-base/releases)
@@ -82,7 +85,7 @@ Available actions:
   push  <version>                         - Pushes images to the Docker Hub
 
 ```
-In the absence of a specified Python version, the version defined in PYTHON_VERSION.txt 
+In the absence of a specified Python version, the version defined in PYTHON_VERSION.txt
 will be used as the default
 
 For instance:
