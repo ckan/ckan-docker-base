@@ -49,12 +49,16 @@ show_tags() {
     sorted_versions="master"$'\n'"$sorted_versions"
 
     # Process sorted versions
+    last_git_tag=$(git describe --tags --abbrev=0)
     last_minor_version=""
     for version in $sorted_versions; do
         if [[ "$version" == "master" ]]; then
             # Special case for master
+            python_version=$(cat "ckan-master/PYTHON_VERSION.txt")
             echo "Tags for CKAN version master:"
             echo "  - master"
+            echo "  - master-py$python_version"
+            echo "  - master-py$python_version-$last_git_tag"
         else
             # Handle regular versions
             minor_version="${version%.*}" # Extract the minor version (e.g., 2.11)
@@ -64,11 +68,15 @@ show_tags() {
             # Print minor version tag only once
             if [[ "$minor_version" != "$last_minor_version" ]]; then
                 echo "  - $minor_version"
+                echo "  - $minor_version-$last_git_tag"
                 echo "  - $minor_version-py$python_version"
+                echo "  - $minor_version-py$python_version-$last_git_tag"
             fi
             # Print full version tag
             echo "  - $version"
+            echo "  - $version-$last_git_tag"
             echo "  - $version-py$python_version"
+            echo "  - $version-py$python_version-$last_git_tag"
             last_minor_version="$minor_version"
         fi
         echo ""
@@ -84,18 +92,35 @@ push_images() {
     docker push "$tag_name"
     docker push "$alt_tag_name"
     
-    # Check if a Python Dockerfile exists or if the CKAN version is 2.11
-    if [[ -n "$python_dockerfile" || "$ckan_version_ref" == "2.11" ]]; then
+    # Check if a Python Dockerfile exists
+    if [[ -n "$python_dockerfile" ]]; then
+        log "Pushing image: $python_tag_name"
+        docker push "$python_tag_name"
+        docker push "$python_alt_tag_name"
+    
+    # If not, check if the CKAN version is greater than 2.10
+    elif [[ "$ckan_version_ref" =~ ^([2-9])\.([0-9]+) ]]; then
+        major=${BASH_REMATCH[1]}
+        minor=${BASH_REMATCH[2]}
+    
+    # Check if major version is greater than 2 or if it's 2 and minor is greater than 10
+    if [[ $major -gt 2 || ($major -eq 2 && $minor -gt 10) ]]; then
         log "Pushing image: $python_tag_name"
         docker push "$python_tag_name"
         docker push "$python_alt_tag_name"
     fi
+fi
 }
 
 set_vars() {
     local ckan_version_ref="$1"
     local env="$2"
     local python_version="$3"
+
+    if [ ! -d "ckan-$ckan_version_ref" ]; then
+    echo "Unknown version: $ckan_version_ref"
+    exit 1
+    fi
 
     ckan_version=$(cat "ckan-$ckan_version_ref/VERSION.txt")
     if [ -z "$python_version" ]; then
