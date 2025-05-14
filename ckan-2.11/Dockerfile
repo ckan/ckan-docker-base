@@ -1,6 +1,7 @@
 ARG ENV=base
+ARG PYTHON_VERSION
 
-FROM python:3.10-slim-bookworm AS python
+FROM python:${PYTHON_VERSION}-slim-bookworm AS python
 
 
 # ┌─────────────────────────────────────────────────────────────┐
@@ -67,6 +68,7 @@ RUN mkdir -p ${SRC_DIR}
 
 # Install uwsgi, the CKAN application, the dependency packages for CKAN plus some confiquration
 RUN pip3 install -U pip && \
+    pip3 install -U setuptools>=70.0.0 && \
     pip3 install uwsgi && \
     cd ${SRC_DIR} && \
     pip3 install -e git+${GIT_URL}@${CKAN_REF}#egg=ckan && \

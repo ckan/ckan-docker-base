@@ -25,6 +25,7 @@ RUN apk add --no-cache \
     uwsgi-http \
     uwsgi-corerouter \
     uwsgi-python \
+    wget \
     # Temporary packages to build DataPusher requirements
     && apk add --no-cache --virtual .build-deps \
     gcc \

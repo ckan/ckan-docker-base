@@ -1,6 +1,7 @@
 name: Build and push the master images
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "15 5 * * *"
 

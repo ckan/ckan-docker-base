@@ -22,11 +22,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Fetch tags 
-        # Needed because of actions/checkout#1467
-        run: |
-          git fetch --tags --force
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+          ref: ${{ github.ref }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -99,6 +98,7 @@ jobs:
 
           echo "BASE_TAGS=$BASE_TAGS" >> $GITHUB_ENV
           echo "DEV_TAGS=$DEV_TAGS" >> $GITHUB_ENV
+          echo "PY_VERSION_VALUE=$PY_VERSION_VALUE" >> $GITHUB_ENV
 
           # CKAN_REF
           if [[ $VERSION_VALUE != "master" ]]; then VERSION_VALUE="ckan-$VERSION_VALUE"; fi
@@ -117,6 +117,7 @@ jobs:
           build-args: |
             CKAN_REF=${{ env.CKAN_REF }}
             ENV=base
+            PYTHON_VERSION=${{ env.PY_VERSION_VALUE || '' }}
           tags: ${{ env.BASE_TAGS }}
 
       - name: Build ${{ inputs.ckan-major-version }} dev
@@ -128,4 +129,5 @@ jobs:
           build-args: |
             CKAN_REF=${{ env.CKAN_REF }}
             ENV=dev
+            PYTHON_VERSION=${{ env.PY_VERSION_VALUE || '' }}
           tags: ${{ env.DEV_TAGS }}

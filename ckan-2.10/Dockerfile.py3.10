@@ -74,6 +74,7 @@ COPY setup/supervisord.py3.conf /etc/supervisord.conf
 
 # Install uwsgi, the CKAN application, the dependency packages for CKAN plus some confiquration
 RUN pip3 install -U pip && \
+    pip3 install -U setuptools>=70.0.0 && \
     pip3 install uwsgi && \
     cd ${SRC_DIR} && \
     pip3 install -e git+${GIT_URL}@${CKAN_REF}#egg=ckan && \
