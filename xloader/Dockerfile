@@ -63,7 +63,6 @@ RUN pip3 install -U pip && \
     cd ${SRC_DIR} && \
     pip3 install -e git+${GIT_URL}@${CKAN_VERSION}#egg=ckan && \
     cd ckan && \
-    #cp who.ini ${APP_DIR} && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
     pip3 install -e git+https://github.com/okfn/ckanext-envvars.git#egg=ckanext-envvars && \
@@ -100,21 +99,5 @@ RUN chown ckan:ckan-sys ${APP_DIR}/ckan.ini && \
     chown -R ckan:ckan-sys ${CKAN_STORAGE_PATH}
 
 USER ckan
-
-# Create a local user and group plus set up the storage path
-#RUN groupadd -g 92 ckan && \
-#    useradd -rm -d /srv/app -s /bin/bash -g ckan -u 92 ckan && \
-#    mkdir -p ${CKAN_STORAGE_PATH} && \
-#    chown -R ckan:ckan ${CKAN_STORAGE_PATH}
-
-# Create entrypoint directory for children image scripts
-#ONBUILD RUN mkdir /docker-entrypoint.d
-
-#HEALTHCHECK --interval=30s --timeout=10s --start-period=5s  --retries=3 \ 
-#  CMD pgrep ${WORKER_PROCESS} > /dev/null || exit 1
-
-#COPY setup/api_token_test.sh ${APP_DIR}
-
-#RUN chmod +x ${APP_DIR}/api_token_test.sh
 
 CMD ["/srv/app/start_background_worker.sh"]
