@@ -64,6 +64,15 @@ Once the maintainers decide it's time to do a new release, changes should be doc
 part of the release notes. Publishing the new release will trigger the actions that push
 the images to Docker Hub.
 
+#### Doing a new CKAN release
+
+1. Create a new branch `patch-releases-MM-YYYY`.
+2. Change the `VERSION.txt` file on each version folder to be the relevant release branch instead of a tag (e.g. `dev-v2.11` instead of `2.11.3`)
+3. Push the changes to trigger the build actions and create a PR. Make sure there are no build errors. Re-run if the release
+   branches had significant changes.
+4. Once the CKAN release is tagged, change back the `VERSION.txt` to the newly released tag (e.g. `2.11.4`)
+5. Merge the `patch-releases-MM-YYYY` branch, create a `vYYYYMMDD` tag in this repo and create a new release
+   to trigger the publishing to Docker Hub.
 
 ### Building the images locally
 
