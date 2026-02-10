@@ -89,7 +89,8 @@ RUN apk add --no-cache git \
 COPY setup/supervisord.conf /etc
 
 # Install CKAN
-RUN pip3 install -e git+${GIT_URL}@${CKAN_REF}#egg=ckan && \
+RUN pip3 install -U "setuptools==81" && \
+    pip3 install -e git+${GIT_URL}@${CKAN_REF}#egg=ckan && \
     cd ${SRC_DIR}/ckan && \
     pip3 install --no-binary markdown -r requirements.txt && \
     # Install CKAN envvars to support loading config from environment variables
