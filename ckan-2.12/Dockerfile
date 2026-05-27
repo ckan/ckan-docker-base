@@ -15,6 +15,7 @@ ARG PYTHON_VERSION=3.14
 
 FROM python:${PYTHON_VERSION}-slim-bookworm AS builder
 
+# Tag passed through via build.sh or GitHub Actions
 ARG CKAN_REF
 
 ENV APP_DIR=/srv/app
@@ -65,9 +66,9 @@ RUN pip3 install -U pip && \
 
 FROM python:${PYTHON_VERSION}-slim-bookworm AS base
 
-# Tag passed through via the Makefile
+# Tag passed through via build.sh or GitHub Actions
 ARG CKAN_REF
-# Make it available to child images
+# Make CKAN_REF available to child images
 ENV CKAN_REF=${CKAN_REF}
 
 # Internals, you probably don't need to change these
@@ -139,6 +140,13 @@ EXPOSE 5000
 
 CMD ["/srv/app/start_ckan.sh"]
 
+LABEL org.opencontainers.image.title="CKAN" \
+      org.opencontainers.image.description="CKAN data portal base image" \
+      org.opencontainers.image.source="https://github.com/ckan/ckan-docker-base" \
+      org.opencontainers.image.url="https://ckan.org" \
+      org.opencontainers.image.licenses="AGPL-3.0-or-later" \
+      org.opencontainers.image.authors="CKAN Tech Team"
+
 
 # ┌─────────────────────────────────────────────────────────────┐
 # │                                                             │
@@ -177,6 +185,8 @@ USER ckan
 
 CMD ["/srv/app/start_ckan_development.sh"]
 
+LABEL org.opencontainers.image.title="CKAN (developmet server)" \
+      org.opencontainers.image.description="CKAN data portal development image"
 
 # ──────────────────────────────────────────────────────────────
 
