@@ -42,7 +42,7 @@ RUN mkdir -p ${SRC_DIR}
 # Install uwsgi, CKAN, the CKAN requirements and ckanext-envvars,
 # and create the default ckan.ini file
 RUN pip3 install -U pip && \
-    pip3 install -U "setuptools==81" && \
+    pip3 install -U setuptools && \
     pip3 install uwsgi && \
     cd ${SRC_DIR} && \
     pip3 install -e git+${GIT_URL}@${CKAN_REF}#egg=ckan && \
