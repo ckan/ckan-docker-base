@@ -10,13 +10,76 @@ log() {
 show_versions() {
     echo "Available CKAN versions:"
     count=1
+
+    # Collect all directories matching the pattern "ckan-*"
+    versions=()
     for dir in ckan-*; do
         if [ -f "$dir/VERSION.txt" ]; then
             patchversion=$(<"$dir/VERSION.txt")
-            minorversion="${patchversion%.*}"
-            echo "$count. $minorversion (patch version: $patchversion)"
-            ((count++))
+            versions+=("$patchversion")
         fi
+    done
+
+    # Sort versions: master first, then descending numerical order
+    sorted_versions=$(printf "%s\n" "${versions[@]}" | sort -rV | sed '/^master$/d')
+    sorted_versions="master"$'\n'"$sorted_versions"
+
+    # Display sorted versions
+    for version in $sorted_versions; do
+        minorversion="${version%.*}"
+        echo "$count. $minorversion (patch version: $version)"
+        ((count++))
+    done
+}
+
+show_tags() {
+    echo "Available CKAN tags:"
+
+    # Collect all directories matching the pattern "ckan-*"
+    versions=()
+    for dir in ckan-*; do
+        if [ -f "$dir/VERSION.txt" ]; then
+            patchversion=$(<"$dir/VERSION.txt")
+            versions+=("$patchversion")
+        fi
+    done
+
+    # Sort versions: master first, then descending numerical order
+    sorted_versions=$(printf "%s\n" "${versions[@]}" | sort -rV | sed '/^master$/d')
+    sorted_versions="master"$'\n'"$sorted_versions"
+
+    # Process sorted versions
+    last_git_tag=$(git describe --tags --abbrev=0)
+    last_minor_version=""
+    for version in $sorted_versions; do
+        if [[ "$version" == "master" ]]; then
+            # Special case for master
+            python_version=$(cat "ckan-master/PYTHON_VERSION.txt")
+            echo "Tags for CKAN version master:"
+            echo "  - master"
+            echo "  - master-py$python_version"
+            echo "  - master-py$python_version-$last_git_tag"
+        else
+            # Handle regular versions
+            minor_version="${version%.*}" # Extract the minor version (e.g., 2.11)
+            python_version=$(cat "ckan-$minor_version/PYTHON_VERSION.txt")
+
+            echo "Tags for CKAN version $minor_version (patch version: $version):"
+            # Print minor version tag only once
+            if [[ "$minor_version" != "$last_minor_version" ]]; then
+                echo "  - $minor_version"
+                echo "  - $minor_version-$last_git_tag"
+                echo "  - $minor_version-py$python_version"
+                echo "  - $minor_version-py$python_version-$last_git_tag"
+            fi
+            # Print full version tag
+            echo "  - $version"
+            echo "  - $version-$last_git_tag"
+            echo "  - $version-py$python_version"
+            echo "  - $version-py$python_version-$last_git_tag"
+            last_minor_version="$minor_version"
+        fi
+        echo ""
     done
 }
 
@@ -28,18 +91,36 @@ push_images() {
     log "Pushing image: $tag_name"
     docker push "$tag_name"
     docker push "$alt_tag_name"
-
+    
+    # Check if a Python Dockerfile exists
     if [[ -n "$python_dockerfile" ]]; then
         log "Pushing image: $python_tag_name"
         docker push "$python_tag_name"
         docker push "$python_alt_tag_name"
+    
+    # If not, check if the CKAN version is greater than 2.10
+    elif [[ "$ckan_version_ref" =~ ^([2-9])\.([0-9]+) ]]; then
+        major=${BASH_REMATCH[1]}
+        minor=${BASH_REMATCH[2]}
+    
+    # Check if major version is greater than 2 or if it's 2 and minor is greater than 10
+    if [[ $major -gt 2 || ($major -eq 2 && $minor -gt 10) ]]; then
+        log "Pushing image: $python_tag_name"
+        docker push "$python_tag_name"
+        docker push "$python_alt_tag_name"
     fi
+fi
 }
 
 set_vars() {
     local ckan_version_ref="$1"
     local env="$2"
     local python_version="$3"
+
+    if [ ! -d "ckan-$ckan_version_ref" ]; then
+    echo "Unknown version: $ckan_version_ref"
+    exit 1
+    fi
 
     ckan_version=$(cat "ckan-$ckan_version_ref/VERSION.txt")
     if [ -z "$python_version" ]; then
@@ -119,6 +200,7 @@ show_usage() {
     echo "Usage: $0 <action> [<params>]"
     echo "Available actions:"
     echo "  versions                                - Shows the current CKAN versions used"
+    echo "  tags                                    - Shows all tags for all CKAN versions"
     echo "  build <version> [base|dev] [py version] - Builds images for a CKAN version"
     echo "                                            Optionally specify 'base' or 'dev'."
     echo "                                            Optionally specify a Python version."
@@ -136,6 +218,9 @@ action=$1
 case "$action" in
     "versions")
         show_versions
+        ;;
+    "tags")
+        show_tags
         ;;
     "build")
         ckan_version_ref=$2
