@@ -1,0 +1,53 @@
+name: CKAN Docker Image Scan with Snyk
+
+on:
+  schedule:
+    # Run weekly on Monday at 9:00 AM
+    - cron: '0 9 * * 1'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  snyk-docker-scan:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        docker-image:
+          - 'ckan/ckan-base:master'
+          - 'ckan/ckan-base:2.11'
+          - 'ckan/ckan-dev:2.11'
+          - 'ckan/ckan-base:2.10-py3.10'
+          - 'ckan/ckan-dev:2.10-py3.10'
+          - 'ckan/ckan-base-datapusher:0.0.21'
+      # Don't fail the entire workflow if one image scan fails
+      fail-fast: false
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Snyk CLI
+        uses: snyk/actions/setup@master
+
+      - name: Log in to Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+        
+      # Scan the Docker image
+      - name: Snyk scan Docker image
+        run: |
+          snyk container test ${{ matrix.docker-image }} \
+            --severity-threshold=high \
+            --org=${{ secrets.SNYK_ORG }} \
+            --project-name=${{ matrix.docker-image }} \
+            --report
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      
+      - name: Monitor Docker image
+        run: |
+          snyk container monitor ${{ matrix.docker-image }} \
+            --org=${{ secrets.SNYK_ORG }} \
+            --project-name=${{ matrix.docker-image }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
