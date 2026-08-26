@@ -1,0 +1,14 @@
+name: Build and push CKAN 2.12 images
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  call-reusable-workflow:
+    uses: ./.github/workflows/reusable-docker-publish.yml
+    with:
+      ckan-major-version: "2.12"
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
