@@ -54,6 +54,33 @@ ckan-X.XX
 `start_ckan.sh` contains environment variables to configure the behavior of the [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) server that runs CKAN.
 See [here](https://github.com/ckan/ckan-docker#uwsgi-command-line-arguments) to find the documentation of the available options.
 
+### What happens when a container starts
+
+`start_ckan.sh` (and `start_ckan_development.sh` in the dev images) runs these steps, in this order:
+
+1. Generates `SECRET_KEY`, `WTF_CSRF_SECRET_KEY` and the API token secrets into `ckan.ini`, if `SECRET_KEY` is empty there. The development script also writes `CKAN__PLUGINS` into `ckan.ini` at this point.
+2. Runs `prerun.py`, which does the following unless `MAINTENANCE_MODE=true`:
+    1. waits for the main database (`CKAN_SQLALCHEMY_URL`)
+    2. writes `CKAN__PLUGINS` into `ckan.plugins` in `ckan.ini`
+    3. runs `ckan db init`
+    4. waits for the DataStore database and sets its permissions (`CKAN_DATASTORE_WRITE_URL`)
+    5. checks Solr
+    6. creates the sysadmin from `CKAN_SYSADMIN_NAME`, `CKAN_SYSADMIN_PASSWORD` and `CKAN_SYSADMIN_EMAIL`, if that user does not exist yet
+3. Runs every `*.sh` and `*.py` file in `/docker-entrypoint.d/`, in name order. Images built on these ones add their own start-up steps there.
+4. Starts CKAN.
+
+#### Database migrations at start-up
+
+From CKAN 2.11, `ckan db init` is an alias of `ckan db upgrade`, which applies CKAN's own migrations and then the pending migrations of **every enabled plugin**. So every start brings the database up to date for all the plugins in `CKAN__PLUGINS`, and a script in `/docker-entrypoint.d/` does not need to run `ckan db upgrade -p <plugin>` for them. (CKAN 2.9 and 2.10 only apply CKAN's own migrations here; plugins still need `-p`.)
+
+Things to know:
+
+- **Only enabled plugins are migrated.** Adding a plugin to `CKAN__PLUGINS` applies its migrations on the next start. Removing it does not reverse them.
+- **CKAN chooses the order plugins are migrated in**: alphabetical by plugin name in CKAN 2.11 and 2.12, not the order of `CKAN__PLUGINS`. Each plugin's migrations are tracked separately, so one plugin cannot declare that its migrations need another plugin's. A plugin's migrations can rely on CKAN's own tables, which are always migrated first, but not on another plugin's tables: on an empty database, a plugin whose migrations need tables from a plugin that sorts after it fails on every start.
+- **The plugin list is written before `ckan db init` runs**, so the migrations follow `CKAN__PLUGINS` even when an image's `ckan.ini` lists different plugins.
+- **Migrations run on every start, before CKAN serves requests.** A long migration, such as an index build on a large table, delays every start while it runs; use `CREATE INDEX CONCURRENTLY` and allow for it in any start-up health check.
+- To manage migrations yourself, for example to run plugins in a particular order, set `MAINTENANCE_MODE=true`, which skips all of `prerun.py`'s steps, and run the ones you need in your own start-up script: `ckan db upgrade --skip-plugins` for CKAN's own migrations, then `ckan db upgrade -p <plugin>` for each plugin in the order you need.
+
 ### Release
 
 Images are built and pushed to the Docker Hub after a new [release](https://github.com/ckan/ckan-docker-base/releases)

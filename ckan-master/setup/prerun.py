@@ -211,8 +211,11 @@ if __name__ == "__main__":
         print("[prerun] Maintenance mode, skipping setup...")
     else:
         check_main_db_connection()
-        init_db()
+        # Write CKAN__PLUGINS to the ini file before init_db: since CKAN 2.11,
+        # `ckan db init` also applies migrations for every enabled plugin, so
+        # the plugin list has to be in place when it runs.
         update_plugins()
+        init_db()
         check_datastore_db_connection()
         init_datastore_db()
         check_solr_connection()
