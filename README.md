@@ -10,10 +10,15 @@ The following CKAN versions are available in base or dev forms. They are disting
 
 | CKAN Version | Type |  Base image | Docker tag | Notes |
 | --- | --- | --- | --- | --- |
-| **2.12.x** | **base image** | `python:3.14-slim-bookworm` | `ckan/ckan-base:2.12`, `ckan/ckan-base:2.12.0`, `ckan/ckan-base:2.12-py3.14`, `ckan/ckan-base:2.12.0-py3.14`          |  |
-| **2.12.x** | **dev image**  | `python:3.14-slim-bookworm` | `ckan/ckan-dev:2.12`, `ckan/ckan-dev:2.12.0`, `ckan/ckan-dev:2.12-py3.14`, `ckan/ckan-dev:2.12.0-py3.14`            |  |
-| 2.11.x | base image | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.11`, `ckan/ckan-base:2.11.6`, `ckan/ckan-base:2.11-py3.10`, `ckan/ckan-base:2.11.6-py3.10`          |  |
-| 2.11.x | dev image  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.11`, `ckan/ckan-dev:2.11.6`, `ckan/ckan-dev:2.11-py3.10`, `ckan/ckan-dev:2.11.6-py3.10`            |  |
+| **2.12.x** | **base image** | `python:3.14-slim-bookworm` | `ckan/ckan-base:2.12`, `ckan/ckan-base:2.12.1`, `ckan/ckan-base:2.12-py3.14`, `ckan/ckan-base:2.12.1-py3.14`          |  |
+| **2.12.x** | **dev image**  | `python:3.14-slim-bookworm` | `ckan/ckan-dev:2.12`, `ckan/ckan-dev:2.12.1`, `ckan/ckan-dev:2.12-py3.14`, `ckan/ckan-dev:2.12.1-py3.14`            |  |
+| 2.11.x | base image | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.11`, `ckan/ckan-base:2.11.7`, `ckan/ckan-base:2.11-py3.10`, `ckan/ckan-base:2.11.7-py3.10`          |  |
+| 2.11.x | dev image  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.11`, `ckan/ckan-dev:2.11.7`, `ckan/ckan-dev:2.11-py3.10`, `ckan/ckan-dev:2.11.7-py3.10`            |  |
+
+The following legacy versions are **no longer supported**:
+
+| CKAN Version | Type |  Base image | Docker tag | Notes |
+| --- | --- | --- | --- | --- |
 | 2.10.x | base image | `python:3.10-slim-bookworm` | `ckan/ckan-base:2.10-py3.10`, `ckan/ckan-base:2.10.11-py3.10` |  |
 | 2.10.x | dev image  | `python:3.10-slim-bookworm` | `ckan/ckan-dev:2.10-py3.10`, `ckan/ckan-dev:2.10.11-py3.10`   |  |
 | 2.10.x | base image | `alpine:3.17`               | `ckan/ckan-base:2.10.10`, `ckan/ckan-base:2.10`               | :warning: Deprecated. Please use a Python/Debian based image |
@@ -40,7 +45,7 @@ Each CKAN version is located in separate repo containing:
 ```
 ckan-X.XX
 ├── Dockerfile          # Dockerfile for the image (in older versions there might be one for alpine and one for python)
-├── VERSION.txt         # Full CKAN version built (eg. 2.11.6, 2.10.10)
+├── VERSION.txt         # Full CKAN version built (eg. 2.11.7, 2.10.10)
 ├── PYTHON_VERSION.txt  # Python version used (eg. 3.10)
 └── setup               # Setup scripts used by the images
     ├── prerun.py
@@ -72,7 +77,7 @@ the images to Docker Hub.
 2. Change the `VERSION.txt` file on each version folder to be the relevant release branch instead of a tag (e.g. `dev-v2.11` instead of `2.11.3`)
 3. Push the changes to trigger the build actions and create a PR. Make sure there are no build errors. Re-run if the release
    branches had significant changes.
-4. Once the CKAN release is tagged, change back the `VERSION.txt` to the newly released tag (e.g. `2.11.6`)
+4. Once the CKAN release is tagged, change back the `VERSION.txt` to the newly released tag (e.g. `2.11.7`)
 5. Merge the `patch-releases-MM-YYYY` branch, create a `vYYYYMMDD` tag in this repo and create a new release
    to trigger the publishing to Docker Hub.
 
