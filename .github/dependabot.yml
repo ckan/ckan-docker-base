@@ -1,0 +1,22 @@
+version: 2
+
+updates:
+
+- package-ecosystem: "docker"
+  directories:
+   - "/"
+   - "/ckan-2.9/"
+   - "/ckan-2.10/"
+   - "/ckan-2.11/"
+   - "/ckan-2.12/"
+   - "/ckan-master/"
+   - "/datapusher/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
