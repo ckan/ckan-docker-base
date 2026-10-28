@@ -10,6 +10,10 @@ on:
         required: false
         default: 'Dockerfile'
         type: string
+      platforms:
+        required: false
+        default: 'linux/amd64,linux/arm64'
+        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: true
@@ -26,6 +30,9 @@ jobs:
           fetch-tags: true
           fetch-depth: 0
           ref: ${{ github.ref }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -112,6 +119,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
+          platforms: ${{ inputs.platforms }}
           context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
           file: ${{ inputs.docker-file }}
           build-args: |
@@ -124,6 +132,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
+          platforms: ${{ inputs.platforms }}
           context: "{{defaultContext}}:ckan-${{ inputs.ckan-major-version }}"
           file: ${{ inputs.docker-file }}
           build-args: |
