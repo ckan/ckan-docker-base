@@ -3,6 +3,8 @@ name: Build and push CKAN 2.11 images
 on:
   release:
     types: [released]
+  schedule:
+    - cron: "15 5 * * *"
 
 jobs:
   call-reusable-workflow:
